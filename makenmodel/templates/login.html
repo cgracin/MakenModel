@@ -15,6 +15,10 @@
             <a href="{{ url_for('show_index') }}" class="navbar-brand">Make n' Model</a>
         </div>
     </nav>
+
+    <!-- Sign In Box -->
+
+    <!-- REVIEW: Need to figure out how to align the white box in the center vertically -->
     <div class="container d-flex justify-content-center">
         <div class="bg-white w-50 rounded">
             <div class="container">
@@ -24,22 +28,22 @@
                     <form action="#hello">
                         <div class="m-3"><p class="text-dark fw-medium fs-2">Sign In</p></div>
                         <div class="mb-3 input-group">
-                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                            <input type="email" class="form-control" id="email_input_form" placeholder="name@email.com" required autofocus>
+                            <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                            <input type="email" class="form-control" id="email_input_form" placeholder="Email" required autofocus>
                         </div>
                         <div class="mb-3 input-group">
-                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
                             <input type="password" class="form-control" placeholder="Password" required>
                         </div>
                         <div class="m-3">
                             <!-- TODO: Button should make post to login route -->
-                            <a class="btn btn-primary" href="#Login" role="button">Sign In</a>
+                            <a class="btn btn-dark col-12" href="#Login" role="button">Sign In</a>
                         </div>
                     </form>
 
                     <!-- TODO: Button should redirect to create account page -->
                     <!-- REVIEW: Should link color be changed since yellow isn't super visibile? -->
-                    <p class="text-dark">Don't have an account? <a href="#Create_account" class="link-warning">Create Account</a></p>
+                    <p class="text-dark">Don't have an account? <a href="{{ url_for('show_create_account') }}" class="link-warning">Create Account</a></p>
 
 
 
