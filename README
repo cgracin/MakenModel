@@ -1,1 +1,11 @@
-hello
+Bootstrap Docs:
+https://getbootstrap.com/docs/5.3/getting-started/introduction/
+
+Comment Legend:
+
+TODO: This means this is a key feature that needs to be implemented
+
+REVIEW: This means we need to decide if this looks good or needs to be changed
+
+TODO:
+- Create logo for login page
