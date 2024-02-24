@@ -22,21 +22,20 @@
 
                         <!-- TODO: Fix form action -->
                     <form action="#hello">
-                        <div class="mb-3">
-                            <label for="email_input_form" class="form-label text-dark fs-4 fw-medium">Email</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                                <input type="email" class="form-control" id="email_input_form" placeholder="name@email.com">
-                            </div>
+                        <div class="m-3"><p class="text-dark fw-medium fs-2">Sign In</p></div>
+                        <div class="mb-3 input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <input type="email" class="form-control" id="email_input_form" placeholder="name@email.com" required autofocus>
                         </div>
                         <div class="mb-3 input-group">
                             <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                            <input type="password" class="form-control" placeholder="Password">
+                            <input type="password" class="form-control" placeholder="Password" required>
+                        </div>
+                        <div class="m-3">
+                            <!-- TODO: Button should make post to login route -->
+                            <a class="btn btn-primary" href="#Login" role="button">Sign In</a>
                         </div>
                     </form>
-
-                    <!-- TODO: Button should make post to login route -->
-                    <a class="btn btn-primary mb-3" href="#Login" role="button">Login</a>
 
                     <!-- TODO: Button should redirect to create account page -->
                     <!-- REVIEW: Should link color be changed since yellow isn't super visibile? -->
