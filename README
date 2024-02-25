@@ -1,6 +1,10 @@
 Bootstrap Docs:
 https://getbootstrap.com/docs/5.3/getting-started/introduction/
 
+To run flask app:
+flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
+
+
 Comment Legend:
 
 TODO: This means this is a key feature that needs to be implemented
