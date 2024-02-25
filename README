@@ -9,12 +9,12 @@ REVIEW: This means we need to decide if this looks good or needs to be changed
 
 TODO:
     Create Account Page:
-        - Fix profile pic upload input
+        - Fix profile pic upload input (DONE)
 
     Sign In page:
         - Username for login
         - Forgot username button
-        - Email person password reset stuf
+        - Email person password reset stuff
 
 - Forgot username/password pages
 - Sliding welcome screen for when a user signs up or logs in
