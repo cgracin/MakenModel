@@ -39,9 +39,9 @@
                         </div>
                         <div class="mb-4">
                             <div class="text-start">
-                                <label for="email_input_form" class="form-label">
+                                <label for="email_input_form" class="form-label fs-5">
                                     Enter your email address
-                                    <span class="text-muted">(optional)</span>
+
                                 </label>
                                 <br>
                                 <small class="text-muted">
@@ -50,25 +50,61 @@
                             </div>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-                            <input type="email" class="form-control" id="email_input_form" placeholder="example@email.com" required>
+                            <input type="email" class="form-control" id="email_input_form" placeholder="example@email.com">
                             </div>
 
                         </div>
-                        <div class="mb-4 input-group">
-                            <span class="input-group-text"><i class="bi bi-unlock-fill"></i></span>
-                            <input type="password" class="form-control" placeholder="Password" required>
+                        <div class="mb-4">
+                            <div class="text-start">
+                                <label for="password_input_form" class="form-label fs-5">
+                                    Create a password
+                                </label>
+                                <small class="text-muted">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<ul>
+                                        <li>Between 6-20 characters</li>
+                                        <li>Contains at least 1 capital letter</li>
+                                        <li>Contains at least 1 lowercase letter</li>
+                                        <li>Contains at least 1 special charater</li>
+                                    </ul>
+                                </small>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-unlock-fill"></i></span>
+                                <input type="password" class="form-control" id="password_input_form" placeholder="Password" required>
+                            </div>
                         </div>
-                        <div class="mb-4 input-group">
-                            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                            <input type="password" class="form-control" placeholder="Re-Enter Passord" required>
+                        <div class="mb-4">
+                            <div class="text-start">
+                                <label for="reenter_password" class="form-label fs-5">
+                                    Re-Enter Password
+                                </label>
+                                <small class="text-muted">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<ul>
+                                        <li>Passwords match</li>
+                                    </ul>
+                                </small>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                            <input type="password" class="form-control" id="reenter_password" placeholder="Re-Enter Passord" required>
+                            </div>
                         </div>
-                        <div class="mb-4 input-group">
-                            <span class="input-group-text"><i class="bi bi-file-image-fill"></i></span>
-                            <input type="text" class="form-control" placeholder="Upload Profile Picture" required>
+                        <div class="mb-4">
+                            <div class="text-start">
+                                <label for="upload_photo" class="form-label fs-5">
+                                    Upload a photo for your profile
+                                    <span class="text-muted">(optional)</span>
+                                </label>
+                            </div>
+                            <!-- TODO: Fix the profile photo upload -->
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-file-image-fill"></i></span>
+                                <input type="text" class="form-control" placeholder="Upload Profile Picture">
+                            </div>
                         </div>
                         <div class="m-3">
-                            <!-- TODO: Button should make post to login route -->
-                            <a class="btn btn-dark col-12" href="#Login" role="button">Create Account</a>
+                            <!-- TODO: Button should make post to create account route -->
+                            <button class="btn btn-dark col-12" type="submit">Create Account</a>
                         </div>
                     </form>
 

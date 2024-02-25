@@ -8,8 +8,14 @@ TODO: This means this is a key feature that needs to be implemented
 REVIEW: This means we need to decide if this looks good or needs to be changed
 
 TODO:
-- Username for login
-- Forgot username button
-    - Email person password reset stuff
+    Create Account Page:
+        - Fix profile pic upload input
+
+    Sign In page:
+        - Username for login
+        - Forgot username button
+        - Email person password reset stuf
+
 - Forgot username/password pages
-- Create logo for login page
+- Sliding welcome screen for when a user signs up or logs in
+- Create logo
