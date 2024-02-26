@@ -65,7 +65,7 @@
     <!-- Alert for user not logged in trying to click buttons -->
 
     <!-- Modal -->
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal fade" id="loginModal" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -73,7 +73,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
-                    <p>Please login to perform this action.</p>
+                    <p>Please log in to access this feature</p>
                 </div>
                 <div class="modal-footer justify-content-center">
                     <a href="{{ url_for('show_login') }}" class="btn btn-warning">Login</a>
@@ -82,10 +82,7 @@
             </div>
         </div>
     </div>
-    <!-- <div id="loginAlert" class="alert alert-warning alert-dismissible fade show" role="alert" style="display: none;">
-        Please <a href="{{ url_for('show_login') }}" class="alert-link">log in</a> to access this feature.
-        <button type="button" data-bs-dismiss="alert" aria-label="Close" class="btn-close"></button>
-    </div> -->
+
 
 {% endblock %}
 
