@@ -1,17 +1,29 @@
-Bootstrap Docs:
+<!-- Bootstrap Docs: -->
 https://getbootstrap.com/docs/5.3/getting-started/introduction/
 
-To run flask app:
+<!-- To run flask app -->
 flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
 
 
-Comment Legend:
+<!-- Html Pages -->
+All html pages are extended from base.html
+    - Call {% extends "base.html" %} on EVERY page to ensure all links are imported
+    - If something is present on every page, add it to base.html
 
+
+<!-- Comment Legend -->
 TODO: This means this is a key feature that needs to be implemented
 
 REVIEW: This means we need to decide if this looks good or needs to be changed
 
-TODO:
+
+
+<!-- GENERAL REVIEW -->
+Does font look good like this or should I go back to normal?
+    - Comparison Screenshots in WEBSITE_STYLE_TESTS Folder
+
+
+<!-- TODO -->
     Create Account Page:
         - Fix profile pic upload input (DONE)
 
@@ -20,6 +32,6 @@ TODO:
         - Forgot username button
         - Email person password reset stuff
 
-- Forgot username/password pages
-- Sliding welcome screen for when a user signs up or logs in
-- Create logo
+    - Forgot username/password pages
+    - Sliding welcome screen for when a user signs up or logs in
+    - Create logo

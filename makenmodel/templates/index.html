@@ -1,46 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Make n' Model</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <div class="container-fluid px-5">
-            <a href="#" class="navbar-brand">Make n' Model</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navmenu">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a href="#learn" class="nav-link">Toolbox</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#questions" class="nav-link">Models</a>
-                    </li>
-                    {% if logged_in %}
-                    <!-- TODO: change this to show username instead of profile and settings -->
-                    <li class="nav-item">
-                        <a href="#Profile" class="nav-link">Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#Settings" class="nav-link">Settings</a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="btn btn-warning" href="{{ url_for('show_login')}}" role="button">Login</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
+<!-- Index.html -->
 
+{% extends "base.html" %}
+
+{% set full_nav = True %}
+
+{% block content %}
     <!-- Showcase -->
 
     <section class="bg-dark text-light p-5 text-center text-sm-start">
@@ -49,12 +13,130 @@
                 <div>
                     <h1>A Model Maker's <span class="text-warning">Personal Assistant</span></h1>
                     <p class="lead my-4">Welcome to Make n' Model! Here you can keep track of your modeling paints and tools, and filter to find models that only use the tools you have!</p>
-                    <button class="btn btn-primary btn-lg">Add your tools</button>
                 </div>
                 <img class="img-fluid w-50 d-none d-sm-block" src="{{ url_for('static', filename='images/mustang-img.png') }}" alt="mustang-img">
             </div>
+            {% if not logged_in %}
+                <a href="{{ url_for('show_create_account') }}" class="btn btn-warning">Create Account</a>
+            {% endif %}
         </div>
     </section>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</body>
-</html>
+
+    <!-- Cards for Inventory and Model Search -->
+    <section class="p-5">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                <div class="col">
+                    <div class="card h-100 bg-dark text-light">
+                        <div class="card-body text-center d-flex flex-column">
+                            <div class="h1 mb-3">
+                                <i class="bi-tools"></i>
+                            </div>
+                            <h3 class="card-title mb-3">Add Tools</h3>
+                            <p class="card-text">
+                                Add paint and tools to your personal toolbox. We will use this to filter and recommend models for you based on the tools you own!
+                            </p>
+                            <!-- TODO: Fix link -->
+                            <a id='add_tools_button' href="#Add_Tools" data-logged-in="{{ logged_in }}" class="btn btn-primary mt-auto">Add Tools</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 bg-dark text-light">
+                        <div class="card-body text-center d-flex flex-column">
+                            <div class="h1 mb-3">
+                                <i class="bi-search"></i>
+                            </div>
+                            <h3 class="card-title mb-3">
+                                Find Models
+                            </h3>
+                            <p class="card-text">
+                                Search for models based on the paints and tools in your personal collection
+                            </p>
+                            <!-- TODO: Fix link -->
+                            <a id='find_models_button' href="#Find_models" data-logged-in="{{ logged_in }}" class="btn btn-primary mt-auto">Find Models</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Alert for user not logged in trying to click buttons -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login Required</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>Please login to perform this action.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <a href="{{ url_for('show_login') }}" class="btn btn-warning">Login</a>
+                    <!-- Add login button or link here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div id="loginAlert" class="alert alert-warning alert-dismissible fade show" role="alert" style="display: none;">
+        Please <a href="{{ url_for('show_login') }}" class="alert-link">log in</a> to access this feature.
+        <button type="button" data-bs-dismiss="alert" aria-label="Close" class="btn-close"></button>
+    </div> -->
+
+{% endblock %}
+
+{% block custom_scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const addTools = document.querySelector('#add_tools_button');
+            const tools_nav = document.querySelector('#tools_nav_button');
+            const addModels = document.querySelector('#find_models_button');
+            const models_nav = document.querySelector('#models_nav_button');
+            const loginAlert = new bootstrap.Modal(document.getElementById('loginModal'))
+
+            addTools.addEventListener('click', function (event) {
+
+                const loggedIn = addTools.getAttribute('data-logged-in');
+
+                if (loggedIn == 'False') {
+                    event.preventDefault();
+                    loginAlert.show();
+                }
+            });
+
+            tools_nav.addEventListener('click', function (event) {
+
+                const loggedIn = tools_nav.getAttribute('data-logged-in');
+
+                if (loggedIn == 'False') {
+                    event.preventDefault();
+                    loginAlert.show();
+                }
+            });
+
+            addModels.addEventListener('click', function (event) {
+
+                const loggedIn = addModels.getAttribute('data-logged-in');
+
+                if (loggedIn == 'False') {
+                    event.preventDefault();
+                    loginAlert.show();
+                }
+            });
+
+            models_nav.addEventListener('click', function (event) {
+
+                const loggedIn = models_nav.getAttribute('data-logged-in');
+
+                if (loggedIn == 'False') {
+                    event.preventDefault();
+                    loginAlert.show();
+                }
+            });
+        });
+    </script>
+{% endblock %}
