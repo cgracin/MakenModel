@@ -15,7 +15,7 @@
                 <div class="text-center">
 
                         <!-- TODO: Fix form action -->
-                    <form action="#hello" class="needs-validation" novalidate>
+                    <form action="{{ url_for('create_account') }}" method='post' enctype='multipart/form-data' class="needs-validation" novalidate>
                         <div class="m-3"><p class="text-dark fw-medium fs-2">Create Account</p></div>
                         <div class="mb-4">
                             <div class="text-start fs-5">
@@ -23,12 +23,19 @@
                             </div>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                                <input type="text" class="form-control" id="username" placeholder="Username" required autofocus>
+                                <input name='username' type="text" class="form-control" id="username" placeholder="Username" required autofocus>
 
                                 <div class="invalid-feedback">
                                     Please enter a username
                                 </div>
+
                             </div>
+                            <!-- If user enters a username that has already been taken -->
+                            {% if username_error %}
+                                <div class="alert alert-warning mt-2" role="alert">
+                                    {{ username_error }}
+                                </div>
+                            {% endif %}
                         </div>
                         <div class="mb-4">
                             <div class="text-start">
@@ -42,11 +49,18 @@
                             </div>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-                            <input type="email" class="form-control" id="email_input_form" placeholder="example@email.com" required>
+                            <input name='email' type="email" class="form-control" id="email_input_form" placeholder="example@email.com" required>
                             <div class="invalid-feedback">
                                 Invalid Email Address
                             </div>
+
                             </div>
+                            <!-- If user enters email that already has an account -->
+                            {% if email_error %}
+                                <div class="alert alert-warning mt-2" role="alert">
+                                    {{ email_error }}
+                                </div>
+                            {% endif %}
 
                         </div>
                         <div class="mb-4">
@@ -65,7 +79,7 @@
                             </div>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-unlock-fill"></i></span>
-                                <input type="password" class="form-control" id="password_input_form" placeholder="Password" required>
+                                <input name='password' type="password" class="form-control" id="password_input_form" placeholder="Password" required>
                                 <div class="invalid-feedback">
                                     Invalid Password
                                 </div>
@@ -84,7 +98,7 @@
                             </div>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                            <input type="password" class="form-control" id="reenter_password" placeholder="Re-Enter Passord" required>
+                            <input name='verify_password' type="password" class="form-control" id="reenter_password" placeholder="Re-Enter Passord" required>
                             <div class="invalid-feedback">
                                 Passwords do not match
                             </div>
@@ -99,7 +113,7 @@
                             </div>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-file-image-fill"></i></span>
-                                <input type="file" class="form-control" id="formFile" placeholder="Upload Profile Picture">
+                                <input name='profile_pic_filename' type="file" class="form-control" id="formFile" placeholder="Upload Profile Picture">
                             </div>
                         </div>
                         <div class="m-3">
