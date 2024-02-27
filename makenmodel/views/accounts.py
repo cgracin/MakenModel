@@ -13,6 +13,7 @@ import hashlib
 import uuid
 import pathlib
 import os
+from werkzeug.utils import secure_filename
 
 
 
@@ -31,6 +32,13 @@ def show_create_account():
 
     return flask.render_template('create_account.html', **context)
 
+@makenmodel.app.route('/accounts/logout/', methods=['POST'])
+def logout():
+    '''Logs user out'''
+    if 'username' in flask.session:
+        flask.session.pop('username', None)
+    return flask.redirect(flask.url_for('show_index'))
+
 
 @makenmodel.app.route('/accounts/create-account/', methods=['POST'])
 def create_account():
@@ -43,18 +51,17 @@ def create_account():
     username = flask.request.form['username']
     email = flask.request.form['email']
     password = flask.request.form['password']
-    verify_password = flask.request.form['verify_password']
 
     # Checking if user provided a profile picture
     if 'profile_pic_filename' in flask.request.files:
-        profile_pic_filename = flask.request.files['profile_pic_filename'].filename
+        profile_pic_object = flask.request.files['profile_pic_filename']
+        profile_pic_filename = profile_pic_object.filename
         context['profile_pic_filename'] = profile_pic_filename
 
     # TODO: remove this shit
     context['username'] = username
     context['password'] = password
     context['email'] = email
-    context['verify_password'] = verify_password
 
     cur = connection.execute(
         "SELECT COUNT(*) AS count FROM users WHERE username = ?",
@@ -76,7 +83,50 @@ def create_account():
 
     # If there are no conflicting emails or usernames in input
     if 'username_error' not in context and 'email_error' not in context:
-        return flask.render_template('test.html', **context)
+
+        # Encrypting password
+        algorithm = 'sha512'
+        salt = uuid.uuid4().hex
+        hash_obj = hashlib.new(algorithm)
+        password_salted = salt + password
+        hash_obj.update(password_salted.encode('utf-8'))
+        password_hash = hash_obj.hexdigest()
+        password_db_string = '$'.join([algorithm, salt, password_hash])
+
+        # Making profile_pic filename
+        try:
+            if profile_pic_filename:
+                profile_pic_filename = secure_filename(profile_pic_object.filename)
+
+                unique_filename = str(uuid.uuid4()) + pathlib.Path(profile_pic_filename).suffix
+
+                upload_folder = makenmodel.app.config['UPLOAD_FOLDER']
+
+                filepath = os.path.join(upload_folder, unique_filename)
+
+                print('upload folder: ', upload_folder)
+                print('filepath: ', filepath)
+
+                profile_pic_object.save(filepath)
+
+            else:
+                # If a user doesn't input a profile picture
+                unique_filename = 'default_profileasffaskf348728458234.jpg'
+        except IOError as e:
+            print(f"IOError: Failed to save file. Error: {e}")
+
+        cur = connection.execute(
+            "INSERT INTO users "
+            "(username, password, email, profile_pic_filename) "
+            "VALUES (?, ?, ?, ?)",
+            (username, password_db_string, email, unique_filename)
+        )
+
+        connection.commit()
+
+        flask.session['username'] = username
+
+        return flask.redirect(flask.url_for('show_index'))
 
     # If there is a username or email conflict
     return flask.render_template('create_account.html', **context)

@@ -38,10 +38,14 @@
                         <li class="nav-item">
                             <a href="#Settings" class="nav-link">Settings</a>
                         </li>
+                        <!-- TODO: FIX Styling for logout button -->
+                        <li class="nav-item">
+                            <form action="{{ url_for('logout') }}" method="post"><button type='submit' class="nav-link" style="background:none;border: none;padding:0;">Logout</button></form>
+                        </li>
                         {% else %}
                         <li class="nav-item">
-                            <a class="btn btn-warning" href="{{ url_for('show_login')}}" role="button">Login</a>
-                        </li> -->
+                            <a class="btn btn-warning" href="{{ url_for('show_login')}}"- role="button">Login</a>
+                        </li>
                         {% endif %}
                     </ul>
                 </div>

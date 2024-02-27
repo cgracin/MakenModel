@@ -32,6 +32,8 @@ Does font look good like this or should I go back to normal?
 
     Create Account Page:
         - Fix profile pic upload input (DONE)
+        - Fix profile pic upload not showing up in directory
+        - Add sign in with google
 
     Sign In page:
         - Username for login
