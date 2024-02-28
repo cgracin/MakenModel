@@ -23,24 +23,42 @@ Does font look good like this or should I go back to normal?
     - Comparison Screenshots in WEBSITE_STYLE_TESTS Folder
 
 
-<!-- TODO -->
+<!-- IDEAS -->
+
+    Possibly add section that tells how many:
+        - Paints we cover
+        - Models we have in our index
+        - Models we search for your personal recommendations
+
+    Possibly add "leaderboard" section
+        - How many paints you have in your inventory
+            - How your paint count ranks against other users
+        - How many models you've completed
+            - How this ranks against others
+
+    Add social section where users can post pictures of their models
+        - Allow comments and likes from other users
+        - Users can set their profile public or private
+
+    Add Forum section where modelers can converse about techniques and such
+        - We can do some text processing and retrieval stuff here
+
+
+<!-- TODO: Website HTML/Javascript -->
     Index.html:
         - Fix modal pop-up styling for when a user is not signed in
-
-
-
 
     Create Account Page:
         - Fix profile pic upload input (DONE)
         - Fix profile pic upload not showing up in directory
         - Add sign in with google
+        - Sliding welcome screen for when a user signs up or logs in
 
     Sign In page:
         - Username for login
         - Forgot username button
         - Email person password reset stuff
             -https://medium.com/@stevenrmonaghan/password-reset-with-flask-mail-protocol-ddcdfc190968
+        - Forgot username/password pages
 
-    - Forgot username/password pages
-    - Sliding welcome screen for when a user signs up or logs in
     - Create logo

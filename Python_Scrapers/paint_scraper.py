@@ -1,54 +1,101 @@
 from bs4 import BeautifulSoup
 import requests
 
+url = 'https://www.scalemates.com/colors/?ranges=all'
 
-# # This is Tamiya Paint Markers paint just to test that it works
-# url = 'https://www.scalemates.com/colors/tamiya-paint-markers--841'
+base_url = 'https://www.scalemates.com'
 
-# Tamiya test url
-url = 'https://www.scalemates.com/colors/tamiya--655'
+# INPUT:
+# page_url: url of an individual brands page (string)
 
-page = requests.get(url)
+# OUTPUT:
+# brand: name of the paint brand (string)
+# paint_list: contains a list of all paint details (list(list))
+#             [[paint_code, paint_color, background_color, shine_type,
+#               type_paint], ...]
+def get_page_paints(page_url):
+    '''This gets the paints for an individual paints page'''
 
-soup = BeautifulSoup(page.text, features='html.parser')
+    page = requests.get(page_url)
 
-
-output = []
-
-divs = soup.find_all('div', class_='ac dg bgl cc pr mt4')
-
-for div in divs:
-
-    style_attr = div.find('div', style=True)
-    background_color = style_attr['style'].split(':')[3] if style_attr else None
-
-    paint_code = div.find('span', class_='bgb nw')
-    paint_code = paint_code.text if paint_code else None
-
-    a_tags = div.find_all('a')
-
-    paint_color = None
-
-    for a_tag in a_tags:
-
-        span = a_tag.find('span')
-        if span:
-            paint_color = ''.join(text for text in a_tag.stripped_strings if text != span.get_text(strip=True))
+    soup = BeautifulSoup(page.text, features='html.parser')
 
 
-    shine_type = div.find('div', class_='ccf center dib nw bgn')
-    type_paint = div.find('div', class_='cct center dib nw bgg')
+    paint_list = []
 
-    if not type_paint:
-        type_paint = div.find('div', class_='cct center dib nw bgb')
+    brand = soup.find('h1')
+    brand = brand.text
 
-    shine_type = shine_type.text if shine_type else None
-    type_paint = type_paint.text if type_paint else None
+    divs = soup.find_all('div', class_='ac dg bgl cc pr mt4')
 
-    output.append([paint_code, paint_color, background_color, shine_type, type_paint])
+    for div in divs:
+
+        style_attr = div.find('div', style=True)
+        style_list = style_attr['style'].split(';') if style_attr else None
+
+        background_color = None
+
+        if style_list:
+            for style in style_list:
+                if style.startswith('background:'):
+                    background_color = style.split(':')[-1]
+                    break
+
+        paint_code = div.find('span', class_='bgb nw')
+        paint_code = paint_code.text if paint_code else None
+
+        a_tags = div.find_all('a')
+
+        paint_color = None
+
+        for a_tag in a_tags:
+
+            span = a_tag.find('span')
+            if span:
+                paint_color = ''.join(text for text in a_tag.stripped_strings if text != span.get_text(strip=True))
 
 
-print(output)
+        shine_type = div.find('div', class_='ccf center dib nw bgn')
+        type_paint = div.find('div', class_='cct center dib nw bgg')
+
+        if not type_paint:
+            type_paint = div.find('div', class_='cct center dib nw bgb')
+
+        shine_type = shine_type.text if shine_type else None
+        type_paint = type_paint.text if type_paint else None
+
+        paint_list.append([paint_code, paint_color, background_color, shine_type, type_paint])
+
+
+    return brand, paint_list
+
+
+base_page = requests.get(url)
+
+base_soup = BeautifulSoup(base_page.text, features='html.parser')
+
+links = base_soup.find_all('a', class_='pf')
+
+pure_pf_links = [a for a in links if a.get('class') == ['pf']]
+
+url_list = []
+
+for link in pure_pf_links:
+    href = link.get('href')
+    full_url = base_url + href
+    if full_url not in url_list:
+        url_list.append(full_url)
+
+brands_to_paints = {}
+
+for url in url_list:
+
+    brand, paint_list = get_page_paints(url)
+
+    brands_to_paints[brand] = paint_list
+
+
+print(brands_to_paints)
 
 
 
@@ -59,21 +106,6 @@ print(output)
 
 
 
-# matching_links = soup.select('a[href^="/colors/"]')
 
-# nums_to_colors = []
 
-# matching_links = soup.find_all(lambda tag: tag.name == 'a' and tag.get('href', '').startswith('/colors/'))
 
-# for link in matching_links:
-
-#     a_text = ''.join(link.find_all(string=True, recursive=False)).strip()
-
-#     if link.find('span'):
-
-#         span_text = link.find('span').get_text(strip=True)
-
-#         num_color_pair = (span_text, a_text)
-#         nums_to_colors.append(num_color_pair)
-
-# print(nums_to_colors)
