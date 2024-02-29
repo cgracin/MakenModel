@@ -12,6 +12,7 @@ CREATE TABLE users(
 -- Paints table
 CREATE TABLE paints(
     brand VARCHAR(50),
+    paint_name VARCHAR(50),
     unique_paint_identifier INTEGER PRIMARY KEY AUTOINCREMENT,
     paint_code VARCHAR(256),
     background_color VARCHAR(12),

@@ -1,5 +1,9 @@
 from bs4 import BeautifulSoup
 import requests
+import os
+import json
+
+# pylint: disable=C0103
 
 url = 'https://www.scalemates.com/colors/?ranges=all'
 
@@ -98,17 +102,17 @@ for url in url_list:
     brands_to_paints[brand] = paint_list
 
 
-print(brands_to_paints)
+data_folder = 'scraping_data'
+output_filename = 'paint_scrape_data.json'
+
+output_path = os.path.join(data_folder, output_filename)
+
+# Clearing the output file if it is not empty
+if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
+    open(output_path, 'w', encoding='utf-8').close()
+
+with open(output_path, 'w', encoding='utf-8') as output:
+    json.dump(brands_to_paints, output, ensure_ascii=False)
 
 
-
-
-
-
-
-
-
-
-
-
-
+print(f'Final Output file size: {os.path.getsize(output_path)}\n')
