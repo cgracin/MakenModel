@@ -61,6 +61,9 @@ def get_page_paints(page_url):
         if not type_paint:
             type_paint = div.find('div', class_='cct center dib nw bgb')
 
+        if not type_paint:
+            type_paint = div.find('div', class_='cct center dib nw bgo')
+
         shine_type = shine_type.text if shine_type else None
         type_paint = type_paint.text if type_paint else None
 

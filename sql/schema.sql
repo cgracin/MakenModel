@@ -12,16 +12,26 @@ CREATE TABLE users(
 -- Paints table
 CREATE TABLE paints(
     brand VARCHAR(50),
-    paint_id INTEGER,
-    unique_paint_identifier VARCHAR(256),
-    PRIMARY KEY (brand, paint_id)
+    unique_paint_identifier INTEGER AUTOINCREMENT,
+    paint_code VARCHAR(256),
+    background_color VARCHAR(12),
+    shine_type VARCHAR(20),
+    paint_type VARCHAR(20),
+    PRIMARY KEY (brand, unique_paint_identifier)
+);
+
+-- Brands table
+CREATE TABLE brands(
+    brand VARCHAR(50),
+    num_paints INTEGER,
+    unique_brand_identifier INTEGER AUTOINCREMENT PRIMARY KEY
 );
 
 -- User_Paints table
 CREATE TABLE user_paints(
     username VARCHAR(256),
-    paint_id VARCHAR(256),
+    unique_paint_identifier VARCHAR(256),
     FOREIGN KEY (username) REFERENCES User(username) ON DELETE CASCADE,
-    FOREIGN KEY (paint_id) REFERENCES Paints(paint_id) ON DELETE CASCADE,
-    PRIMARY KEY (username, paint_id)
+    FOREIGN KEY (unique_paint_identifier) REFERENCES Paints(unique_paint_identifier) ON DELETE CASCADE,
+    PRIMARY KEY (username, unique_paint_identifier)
 );
