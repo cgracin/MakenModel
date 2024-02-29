@@ -1,3 +1,4 @@
+'''These are functions that transfer the scraped data to the database'''
 import os
 import sys
 import sqlite3
@@ -9,6 +10,7 @@ import json
 data_folder = 'scraping_data'
 
 def get_db():
+    '''Connects to sqlite database'''
     db_folder = 'var'
     db_filename = 'makenmodel.sqlite3'
 
@@ -21,13 +23,10 @@ def get_db():
     return database
 
 
-
 def transfer_paint_data():
     '''Transfers scraped paint info to database'''
 
     connection = get_db()
-
-    print(data_folder)
 
     paint_filename = 'paint_scrape_data.json'
 
@@ -36,11 +35,6 @@ def transfer_paint_data():
     with open(paint_path, 'r', encoding='utf-8') as data:
         paint_data = json.load(data)
 
-
-    insert_query = '''
-    INSERT INTO paints (brand, paint_name, paint_code, background_color, shine_type, paint_type)
-    VALUES (?, ?, ?, ?, ?, ?);
-    '''
 
     cursor = connection.cursor()
 
@@ -68,10 +62,11 @@ def main():
 
     function = sys.argv[1]
 
-
+    # If you only want to transfer paint data
     if function == 'transfer_paint':
         transfer_paint_data()
 
+    # If you want to transfer all scraped data
     elif function == 'all':
         transfer_paint_data()
 

@@ -61,4 +61,17 @@ Does font look good like this or should I go back to normal?
             -https://medium.com/@stevenrmonaghan/password-reset-with-flask-mail-protocol-ddcdfc190968
         - Forgot username/password pages
 
-    - Create logo
+    Toolbox Page:
+        - Add paints searchbar
+            - Autofill when users start to type
+            - Have filters for adding lots of paints at once
+                - Filter by brand
+
+
+<!--  TODO: Scraping -->
+
+    Paint Scraper (DONE)
+        - Scrape all paint data off scalemates and turn it into a json dump (DONE)
+        - Import json dump into sql database (DONE)
+
+    Model Scraper
