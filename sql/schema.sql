@@ -17,8 +17,7 @@ CREATE TABLE paints(
     paint_code VARCHAR(256),
     background_color VARCHAR(12),
     shine_type VARCHAR(20),
-    paint_type VARCHAR(20),
-    FOREIGN KEY (brand) REFERENCES brands(brand)
+    paint_type VARCHAR(20)
 );
 
 -- Brands table

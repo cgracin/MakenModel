@@ -51,7 +51,11 @@ def transfer_paint_data():
     for brand, paints in paint_data.items():
         for paint in paints:
             paint_code, paint_name, background_color, shine_type, paint_type = paint
-            cursor.execute(insert_query, (brand, paint_name, paint_code, background_color, shine_type, paint_type))
+            cursor.execute(
+                "INSERT INTO paints(brand, paint_name, paint_code, background_color, shine_type, paint_type) "
+                "VALUES (?, ?, ?, ?, ?, ?)",
+                (brand, paint_name, paint_code, background_color, shine_type, paint_type)
+                )
 
     connection.commit()
 
