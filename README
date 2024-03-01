@@ -53,12 +53,14 @@ Does font look good like this or should I go back to normal?
 
     Create Account Page:
         - Fix profile pic upload input (DONE)
-        - Fix profile pic upload not showing up in directory
+        - Fix profile pic upload not showing up in uploads directory
+            - When you create an account an upload a profile pic it should show up in var/uploads folder but it is not for some reason
         - Add sign in with google
         - Sliding welcome screen for when a user signs up or logs in
 
     Sign In page:
-        - Username for login
+        - Username for login (DONE)
+        - Login logic (DONE)
         - Forgot username button
         - Email person password reset stuff
             -https://medium.com/@stevenrmonaghan/password-reset-with-flask-mail-protocol-ddcdfc190968
@@ -69,6 +71,16 @@ Does font look good like this or should I go back to normal?
             - Autofill when users start to type
             - Have filters for adding lots of paints at once
                 - Filter by brand
+
+        - Add tracker for paints that are getting low
+            - Have these paints appear in a seperate section on the page
+
+        - Add favorite's selection bar
+            - Displays favorite paint brand
+
+        - Add total paints in collection section
+            - You should be able to see the number of paints in your collection
+            - Should also see
 
 
 <!--  TODO: Scraping -->

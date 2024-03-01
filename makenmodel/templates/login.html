@@ -15,7 +15,6 @@
             <div class="container">
                 <div class="text-center">
 
-                        <!-- TODO: Fix form action -->
                     <form action="{{ url_for('login') }}" method="post" enctype="multipart/form-data">
                         <div class="m-3"><p class="text-dark fw-medium fs-2">Sign In</p></div>
                         <div class="mb-3 input-group">
@@ -37,12 +36,10 @@
                             </div>
                         {% endif %}
                         <div class="m-3">
-                            <!-- TODO: Button should make post to login route -->
                             <button class="btn btn-dark col-12" type="submit">Sign In</a>
                         </div>
                     </form>
 
-                    <!-- TODO: Button should redirect to create account page -->
                     <!-- REVIEW: Should link color be changed since yellow isn't super visibile? -->
                     <p class="text-dark">Don't have an account? <a href="{{ url_for('show_create_account') }}" class="link-warning">Create Account</a></p>
 

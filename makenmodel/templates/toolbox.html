@@ -1,10 +1,21 @@
 <!-- Toolbox.html -->
 
-{% extends base.html %}
+{% extends 'base.html' %}
 
-{$ set full_nav = True %}
+{% set full_nav = True %}
+
+{% block body_class %}single-dark-background{% endblock %}
 
 {% block content %}
 
-<h1> Toolbox</h1>
+<div class="container text-center">
+    <h1 class="text-light">Toolbox</h1>
+    <nav class='d-flex justify-content-center mt-3' aria-label="...">
+        <ul class="pagination">
+            <li class="page-item {% if active_page == 'add-paints' %}active{% endif %}"><a href="{{ url_for('show_add_paints') }}" class="page-link px-5 text-dark">Add Paints</a></li>
+            <li class="page-item {% if active_page == 'overview' %}active{% endif %}"><a href="{{ url_for('show_toolbox') }}" class="page-link px-5 text-dark">Overview</a></li>
+            <li class="page-item {% if active_page == 'your-paints' %}active{% endif %}"><a href="{{ url_for('show_your_paints') }}" class="page-link px-5 text-dark">Your Paints</a></li>
+        </ul>
+    </nav>
+</div>
 {% endblock %}

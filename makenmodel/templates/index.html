@@ -16,7 +16,7 @@
                 </div>
                 <img class="img-fluid w-50 d-none d-sm-block" src="{{ url_for('static', filename='images/mustang-img.png') }}" alt="mustang-img">
             </div>
-            {% if not logged_in %}
+            {% if not logname %}
                 <a href="{{ url_for('show_create_account') }}" class="btn btn-warning">Create Account</a>
             {% endif %}
         </div>
@@ -36,8 +36,7 @@
                             <p class="card-text">
                                 Add paint and tools to your personal toolbox. We will use this to filter and recommend models for you based on the tools you own!
                             </p>
-                            <!-- TODO: Fix link -->
-                            <a id='add_tools_button' href="#Add_Tools" data-logged-in="{{ logged_in }}" class="btn btn-primary mt-auto">Add Tools</a>
+                            <a id='add_tools_button' href="{{ url_for('show_toolbox') }}" data-logged-in="{% if logname %}True{% else %}False{% endif %}" class="btn btn-primary mt-auto">Add Tools</a>
                         </div>
                     </div>
                 </div>
@@ -54,7 +53,7 @@
                                 Search for models based on the paints and tools in your personal collection
                             </p>
                             <!-- TODO: Fix link -->
-                            <a id='find_models_button' href="#Find_models" data-logged-in="{{ logged_in }}" class="btn btn-primary mt-auto">Find Models</a>
+                            <a id='find_models_button' href="#Find_models" data-logged-in="{% if logname %}True{% else %}False{% endif %}" class="btn btn-primary mt-auto">Find Models</a>
                         </div>
                     </div>
                 </div>
