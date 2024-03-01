@@ -5,3 +5,4 @@ from makenmodel.views.accounts import show_login
 from makenmodel.views.accounts import show_create_account
 from makenmodel.views.accounts import create_account
 from makenmodel.views.accounts import logout
+from makenmodel.views.accounts import login

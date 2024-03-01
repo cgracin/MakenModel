@@ -5,6 +5,9 @@ https://getbootstrap.com/docs/5.3/getting-started/introduction/
 flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
 
 
+<!-- LOGIN FOR TEST USER -->
+    username: test_user
+    password: Password1!
 <!-- Html Pages -->
 All html pages are extended from base.html
     - Call {% extends "base.html" %} on EVERY page to ensure all links are imported

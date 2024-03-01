@@ -39,6 +39,46 @@ def logout():
         flask.session.pop('username', None)
     return flask.redirect(flask.url_for('show_index'))
 
+@makenmodel.app.route('/accounts/login/', methods=['POST'])
+def login():
+    username = flask.request.form['username']
+    submitted_password = flask.request.form['password']
+
+    connection = makenmodel.model.get_db()
+
+    cur = connection.execute(
+        "SELECT password FROM users WHERE username = ?",
+        (username,)
+    )
+    user_data = cur.fetchone()
+
+    context = {}
+
+    if user_data:
+
+        stored_password = user_data['password']
+
+        hash_algo, salt, stored_hash = stored_password.split('$')
+
+        hasher = hashlib.new(hash_algo)
+
+        hasher.update((salt + submitted_password).encode('utf-8'))
+
+        hashed_password = hasher.hexdigest()
+
+        if hashed_password == stored_hash:
+            flask.session['username'] = username
+            return flask.redirect(flask.url_for('show_index'))
+
+        # If username is in database, but password is wrong
+        context['wrong_password'] = 'Incorrect Password'
+
+    # If username is not found in database
+    else:
+        context['wrong_username'] = 'Sorry, we can\'t find that username in our system'
+
+    return flask.render_template('login.html', **context)
+
 
 @makenmodel.app.route('/accounts/create-account/', methods=['POST'])
 def create_account():
@@ -123,7 +163,7 @@ def create_account():
         )
 
         connection.commit()
-
+        print(password_db_string)
         flask.session['username'] = username
 
         return flask.redirect(flask.url_for('show_index'))

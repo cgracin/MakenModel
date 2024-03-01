@@ -16,16 +16,26 @@
                 <div class="text-center">
 
                         <!-- TODO: Fix form action -->
-                    <form action="#hello">
+                    <form action="{{ url_for('login') }}" method="post" enctype="multipart/form-data">
                         <div class="m-3"><p class="text-dark fw-medium fs-2">Sign In</p></div>
                         <div class="mb-3 input-group">
-                            <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-                            <input type="email" class="form-control" id="email_input_form" placeholder="Email" required autofocus>
+                            <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                            <input type="text" class="form-control" id="username_input_form" placeholder="Username" name='username' required autofocus>
                         </div>
+                        {% if wrong_username %}
+                                <div class="alert alert-warning mt-2" role="alert">
+                                    {{ wrong_username }}
+                                </div>
+                        {% endif %}
                         <div class="mb-3 input-group">
                             <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                            <input type="password" class="form-control" placeholder="Password" required>
+                            <input type="password" class="form-control" placeholder="Password" name='password' required>
                         </div>
+                        {% if wrong_password %}
+                            <div class="alert alert-warning mt-2" role="alert">
+                                {{ wrong_password }}
+                            </div>
+                        {% endif %}
                         <div class="m-3">
                             <!-- TODO: Button should make post to login route -->
                             <button class="btn btn-dark col-12" type="submit">Sign In</a>
