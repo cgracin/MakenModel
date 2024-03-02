@@ -23,21 +23,6 @@ def get_db():
     return database
 
 
-def clear_db():
-    '''Clears database'''
-    connection = get_db()
-
-    cur = connection.cursor()
-
-    cur.execute("DELETE FROM user_paints")
-    cur.execute("DELETE FROM paints")
-    cur.execute("DELETE FROM brands")
-    cur.execute("DELETE FROM users")
-
-    connection.commit()
-
-    connection.close()
-
 def transfer_paint_data():
     '''Transfers scraped paint info to database'''
 
@@ -81,13 +66,8 @@ def main():
     if function == 'transfer_paint':
         transfer_paint_data()
 
-    # If you want to clear db
-    elif function == 'clear':
-        clear_db()
-
-    # If you want to reset db and transfer all scraped data
-    elif function == 'reset_all':
-        clear_db()
+    # If you want to transfer all scraped data
+    elif function == 'all':
         transfer_paint_data()
 
 
