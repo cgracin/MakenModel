@@ -72,6 +72,8 @@ Does font look good like this or should I go back to normal?
             - Have filters for adding lots of paints at once
                 - Filter by brand
 
+        - Style add paints page
+
         - Add tracker for paints that are getting low
             - Have these paints appear in a seperate section on the page
 
@@ -81,6 +83,7 @@ Does font look good like this or should I go back to normal?
         - Add total paints in collection section
             - You should be able to see the number of paints in your collection
             - Should also see
+
 
 
 <!--  TODO: Scraping -->

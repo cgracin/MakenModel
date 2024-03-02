@@ -71,7 +71,9 @@ def get_page_paints(page_url):
         shine_type = shine_type.text if shine_type else None
         type_paint = type_paint.text if type_paint else None
 
-        paint_list.append([paint_code, paint_color, background_color, shine_type, type_paint])
+        data = [paint_code, paint_color, background_color, shine_type, type_paint]
+        if data not in paint_list:
+            paint_list.append(data)
 
 
     return brand, paint_list

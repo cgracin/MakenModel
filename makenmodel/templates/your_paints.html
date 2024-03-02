@@ -1,4 +1,4 @@
-<!-- Toolbox.html -->
+<!-- add_paints.html -->
 
 {% extends 'base.html' %}
 
@@ -13,13 +13,10 @@
     <nav class='d-flex justify-content-center mt-3' aria-label="...">
         <ul class="pagination">
             <li class="page-item"><a href="{{ url_for('show_add_paints') }}" class="page-link px-5 text-dark">Add Paints</a></li>
-            <li class="page-item active"><a href="{{ url_for('show_toolbox') }}" class="page-link px-5 text-dark">Overview</a></li>
-            <li class="page-item"><a href="{{ url_for('show_your_paints') }}" class="page-link px-5 text-dark">Your Paints</a></li>
+            <li class="page-item"><a href="{{ url_for('show_toolbox') }}" class="page-link px-5 text-dark">Overview</a></li>
+            <li class="page-item active"><a href="{{ url_for('show_your_paints') }}" class="page-link px-5 text-dark">Your Paints</a></li>
         </ul>
     </nav>
 </div>
-
-
-
 
 {% endblock %}
