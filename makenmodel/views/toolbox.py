@@ -38,11 +38,22 @@ def show_add_paints():
 def show_your_paints():
     '''Shows the paints the user has in their collection'''
 
+    connection = makenmodel.model.get_db()
+
     logname = flask.session['username']
 
     context = {}
 
     context['logname'] = logname
+
+    cur = connection.execute(
+        "SELECT p.* FROM user_paints up "
+        "JOIN paints p ON up.unique_paint_identifier = p.unique_paint_identifier "
+        "WHERE up.username = ?",
+        (logname,)
+    )
+    paint_details = cur.fetchall()
+    context['paint_details'] = paint_details
 
     return flask.render_template('your_paints.html', **context)
 
@@ -59,6 +70,8 @@ def add_paints():
 
     brand = flask.request.form['brand']
     paint_info = flask.request.form['paint']
+
+    context['brand'] = brand
 
     # print(paint_info)
     paint_info = paint_info.split(' ')
@@ -79,13 +92,18 @@ def add_paints():
 
     print(paint_code, paint_name, paint_type)
 
-    context['brand'] = brand
-
-    cur = connection.execute(
-        "SELECT unique_paint_identifier FROM paints "
-        "WHERE brand = ? AND paint_code = ? AND paint_name = ? AND paint_type = ?",
-        (brand, paint_code, paint_name, paint_type)
-    )
+    if paint_type != 'null':
+        cur = connection.execute(
+            "SELECT unique_paint_identifier FROM paints "
+            "WHERE brand = ? AND paint_code = ? AND paint_name = ? AND paint_type = ?",
+            (brand, paint_code, paint_name, paint_type)
+        )
+    else:
+        cur = connection.execute(
+            "SELECT unique_paint_identifier FROM paints "
+            "WHERE brand = ? AND paint_code = ? AND paint_name = ?",
+            (brand, paint_code, paint_name)
+        )
 
     identifier = cur.fetchone()['unique_paint_identifier']
 

@@ -24,11 +24,11 @@
     <form action="{{ url_for('add_paints') }}" method='post' enctype='multipart/form-data'>
         <div class="form-group mb-3">
             <label for="brand" class="text-light mb-2">Brand:</label>
-            <input type="text" class="form-control" id="brand" autocomplete="off" name='brand' placeholder="Brand" value={{brand}}>
+            <input  type="text" class="form-control" id="brand" autocomplete="off" name='brand' placeholder="Brand" value="{{ brand if brand else '' }}" required>
         </div>
       <div class="form-group mb-3">
         <label for="paintName" class="text-light mb-2">Paint Name or Paint Code:</label>
-        <input type="text" class="form-control" id="paintName" autocomplete="off" name='paint' placeholder="Paint Name or Paint Code">
+        <input type="text" class="form-control" id="paintName" autocomplete="off" name='paint' placeholder="Paint Name or Paint Code" required>
       </div>
       <button type="submit" class="btn btn-primary">Add to Collection</button>
     </form>
