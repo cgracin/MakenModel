@@ -67,10 +67,11 @@ Does font look good like this or should I go back to normal?
         - Forgot username/password pages
 
     Toolbox Page:
-        - Add paints searchbar
+        - Paints searchbar
             - Autofill when users start to type
             - Have filters for adding lots of paints at once
                 - Filter by brand
+            - Fix null showing up in autofill when paint_type is null
 
         - Style add paints page
 

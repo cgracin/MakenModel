@@ -32,6 +32,8 @@ def get_page_paints(page_url):
 
     divs = soup.find_all('div', class_='ac dg bgl cc pr mt4')
 
+    avoid_dupes = set()
+
     for div in divs:
 
         style_attr = div.find('div', style=True)
@@ -71,9 +73,20 @@ def get_page_paints(page_url):
         shine_type = shine_type.text if shine_type else None
         type_paint = type_paint.text if type_paint else None
 
-        data = [paint_code, paint_color, background_color, shine_type, type_paint]
-        if data not in paint_list:
-            paint_list.append(data)
+
+        if paint_code and paint_color:
+            # This is a group that makes sure we don't add same paint to data twice
+            # gets rid of uppercase and spaces to make sure that these don't distinguish duplicates
+            paint_code_style_gone = paint_code.lower().replace(' ', '')
+            paint_color_style_gone = paint_color.lower().replace(' ', '')
+
+            dupe_criteria = (paint_code_style_gone, paint_color_style_gone, shine_type, type_paint)
+
+            if dupe_criteria not in avoid_dupes:
+                data = [paint_code, paint_color, background_color, shine_type,
+                        type_paint]
+                paint_list.append(data)
+                avoid_dupes.add(dupe_criteria)
 
 
     return brand, paint_list
