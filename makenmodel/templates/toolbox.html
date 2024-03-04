@@ -8,6 +8,8 @@
 
 {% block content %}
 
+<!-- Toolbox Navigation Bar -->
+
 <div class="container text-center">
     <h1 class="text-light">Toolbox</h1>
     <nav class='d-flex justify-content-center mt-3' aria-label="...">
@@ -20,6 +22,36 @@
 </div>
 
 
+<!-- Overview tab -->
+
+<div class="container text-center bg-white mt-3">
+    <div class="row row-cols-2 row-cols-lg-3 g-2 g-lg-3">
+      <div class="col">
+        <div class="p-3 bg-dark rounded text-center">
+            <p class="text-light">You have</p>
+            <h2 class="text-warning">{{ num_paints }}</h2>
+            <p class="text-light">paints in your collection</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="p-3 bg-dark rounded">
+            <h2 class="text-light">
+                Num Brands owned
+            </h2>
+        </div>
+      </div>
+      <div class="col">
+        <div class="p-3 bg-dark rounded">
+            <h2 class="text-light">Paints Getting Low</h2>
+        </div>
+      </div>
+      <div class="col">
+        <div class="p-3 bg-dark rounded">
+            <h2 class="text-light">Add Favorites</h2>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 {% endblock %}

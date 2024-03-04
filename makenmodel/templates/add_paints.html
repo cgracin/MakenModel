@@ -8,6 +8,8 @@
 
 {% block content %}
 
+<!-- Toolbox Navigation Bar -->
+
 <div class="container text-center">
     <h1 class="text-light">Toolbox</h1>
     <nav class='d-flex justify-content-center mt-3' aria-label="...">
@@ -19,19 +21,34 @@
     </nav>
 </div>
 
-<div class="container text-center">
-    <h2 class="text-light">Add Paint to Collection</h2>
-    <form action="{{ url_for('add_paints') }}" method='post' enctype='multipart/form-data'>
+<div class="container text-center w-50">
+  <div class="bg-white rounded">
+    <div class="container">
+      <form action="{{ url_for('add_paints') }}" method='post' enctype='multipart/form-data'>
         <div class="form-group mb-3">
-            <label for="brand" class="text-light mb-2">Brand:</label>
-            <input  type="text" class="form-control" id="brand" autocomplete="off" name='brand' placeholder="Brand" value="{{ brand if brand else '' }}" required>
+          <label for="brand" class="m-2">Brand:</label>
+          <input type="text" class="form-control" id="brand" autocomplete="off" name='brand' placeholder="Brand"
+            value="{{ brand if brand else '' }}" required>
         </div>
-      <div class="form-group mb-3">
-        <label for="paintName" class="text-light mb-2">Paint Name or Paint Code:</label>
-        <input type="text" class="form-control" id="paintName" autocomplete="off" name='paint' placeholder="Paint Name or Paint Code" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Add to Collection</button>
-    </form>
+        <div class="form-group mb-3">
+          <label for="paintName" class="mb-2">Paint Name or Paint Code:</label>
+          <input type="text" class="form-control" id="paintName" autocomplete="off" name='paint'
+            placeholder="Paint Name or Paint Code" required>
+        </div>
+        <button type="submit" class="btn btn-primary mb-3">Add to Collection</button>
+      </form>
+    </div>
+  </div>
+
+  {% if success_message %}
+    <div class="alert alert-success mt-3" role="alert">
+        {{ success_message }}
+    </div>
+  {% elif repeat_color %}
+    <div class="alert alert-warning mt-3" role="alert">
+      {{ repeat_color }}
+    </div>
+  {% endif %}
 </div>
 
 

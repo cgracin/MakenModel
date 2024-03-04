@@ -46,6 +46,8 @@ Does font look good like this or should I go back to normal?
     Add Forum section where modelers can converse about techniques and such
         - We can do some text processing and retrieval stuff here
 
+    Add tab where you can choose a color on a color wheel, and the program returns colors similar to that from brands you want
+
 
 <!-- TODO: Website HTML/Javascript -->
     Index.html:

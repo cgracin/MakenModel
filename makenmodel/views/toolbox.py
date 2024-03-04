@@ -10,14 +10,29 @@ import makenmodel
 
 @makenmodel.app.route('/toolbox/overview/')
 def show_toolbox():
-    '''Renders the toolbox view'''
+    '''Renders the toolbox overview view'''
 
     logname = flask.session['username']
+
+    connection = makenmodel.model.get_db()
 
     context = {}
 
     context['logname'] = logname
     context['active_page'] = 'overview'
+
+    cur = connection.execute(
+        "SELECT COUNT(*) AS paint_count "
+        "FROM user_paints "
+        "WHERE username = ?",
+        (logname,)
+    )
+    paint_count = cur.fetchone()['paint_count']
+
+    if paint_count:
+        context['num_paints'] = paint_count
+    else:
+        context['num_paints'] = 0
 
     return flask.render_template('toolbox.html', **context)
 
@@ -54,6 +69,8 @@ def show_your_paints():
     )
     paint_details = cur.fetchall()
     context['paint_details'] = paint_details
+
+    print(paint_details)
 
     return flask.render_template('your_paints.html', **context)
 
@@ -107,6 +124,16 @@ def add_paints():
 
     identifier = cur.fetchone()['unique_paint_identifier']
 
+    cur = connection.execute(
+        "SELECT * FROM user_paints "
+        "WHERE username = ? AND unique_paint_identifier = ?",
+        (logname, identifier)
+    )
+    exists = cur.fetchone()
+
+    if exists:
+        context['repeat_color'] = "This paint is already in your collection!"
+
     # Inserting username and identifier into db
     connection.execute(
         "INSERT OR IGNORE INTO user_paints (username, unique_paint_identifier) "
@@ -114,5 +141,8 @@ def add_paints():
         (logname, identifier)
     )
     connection.commit()
+
+    if not exists:
+        context['success_message'] = 'Paint added to your collection!'
 
     return flask.render_template('add_paints.html', **context)

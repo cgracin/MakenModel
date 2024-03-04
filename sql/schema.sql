@@ -35,3 +35,17 @@ CREATE TABLE user_paints(
     FOREIGN KEY (unique_paint_identifier) REFERENCES paints(unique_paint_identifier) ON DELETE CASCADE,
     PRIMARY KEY (username, unique_paint_identifier)
 );
+
+-- User_brands table
+CREATE TABLE user_brands(
+    username VARCHAR(256),
+    unique_brand_identifier INTEGER,
+    PRIMARY KEY (username, unique_brand_identifier)
+);
+
+-- User_brand_favorites table
+CREATE TABLE user_fav_brands(
+    username VARCHAR(256),
+    unique_brand_identifier INTEGER,
+    PRIMARY KEY (username, unique_brand_identifier)
+);
