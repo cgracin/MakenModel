@@ -31,6 +31,7 @@ CREATE TABLE brands(
 CREATE TABLE user_paints(
     username VARCHAR(256),
     unique_paint_identifier INTEGER,
+    need_restock BOOLEAN,
     FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE,
     FOREIGN KEY (unique_paint_identifier) REFERENCES paints(unique_paint_identifier) ON DELETE CASCADE,
     PRIMARY KEY (username, unique_paint_identifier)
