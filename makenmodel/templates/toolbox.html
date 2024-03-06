@@ -39,12 +39,17 @@
          </div>
         </div>
         <div class="col">
-          <div class="p-3 bg-dark rounded">
-              <h4 class="text-warning">Paints running low:</h4>
-              {% for paint in paints_needing_restock %}
-                <p class="text-light">{{ paint.brand }} <span class="text-warning">{{ paint.paint_code }}</span> {{ paint.paint_name }} ({{ paint.paint_type }})</p>
-              {% endfor %}
-          </div>
+            <div class="p-3 bg-dark rounded">
+                <h4 class="text-warning">Paints running low:</h4>
+                {% for paint in paints_needing_restock %}
+                  {% if loop.index <= 4 %}
+                    <p class="text-light">{{ paint.brand }} <span class="text-warning">{{ paint.paint_code }}</span> {{ paint.paint_name }} ({{ paint.paint_type }})</p>
+                  {% endif %}
+                {% endfor %}
+                {% if paints_needing_restock|length > 4 %}
+                  <a href="{{ url_for('show_getting_low') }}" class="btn btn-warning mt-3">View All</a>
+                {% endif %}
+            </div>
         </div>
         <div class="col">
           <div class="p-3 bg-dark rounded">

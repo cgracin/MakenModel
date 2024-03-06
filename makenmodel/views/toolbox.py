@@ -58,8 +58,6 @@ def show_toolbox():
 
     paints_needing_restock = cur.fetchall()
 
-    print(paints_needing_restock)
-
     context['paints_needing_restock'] = paints_needing_restock
 
     return flask.render_template('toolbox.html', **context)
@@ -210,3 +208,29 @@ def mark_getting_low():
     connection.commit()
 
     return flask.redirect(flask.url_for('show_your_paints'))
+
+
+@makenmodel.app.route('/toolbox/getting_low/', methods=['GET'])
+def show_getting_low():
+
+    connection = makenmodel.model.get_db()
+
+    logname = flask.session['username']
+
+    context = {}
+
+    context['logname'] = logname
+
+    cur = connection.execute(
+        "SELECT p.paint_code, p.paint_name, p.brand, p.paint_type "
+        "FROM paints p "
+        "JOIN user_paints up ON p.unique_paint_identifier = up.unique_paint_identifier "
+        "WHERE up.username = ? AND up.need_restock = 1",
+        (logname,)
+    )
+
+    paints_needing_restock = cur.fetchall()
+
+    context['need_restock'] = paints_needing_restock
+
+    return flask.render_template('getting_low.html', **context)
