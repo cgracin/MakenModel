@@ -60,6 +60,37 @@ def show_toolbox():
 
     context['paints_needing_restock'] = paints_needing_restock
 
+    cur = connection.execute(
+        "SELECT MAX(paint_count) as max_paint_count FROM ("
+        "SELECT COUNT(up.unique_paint_identifier) as paint_count "
+        "FROM user_paints up "
+        "JOIN paints p ON up.unique_paint_identifier = p.unique_paint_identifier "
+        "WHERE up.username = ? "
+        "GROUP BY p.brand) as brand_counts",
+        (logname,)
+    )
+    max_paint_count_row = cur.fetchone()
+    max_paint_count = max_paint_count_row['max_paint_count'] if max_paint_count_row else 0
+
+    # If there's at least one paint, identify all brands with this maximum count
+    if max_paint_count > 0:
+        cur = connection.execute(
+            "SELECT p.brand, COUNT(up.unique_paint_identifier) AS paint_count "
+            "FROM user_paints up "
+            "JOIN paints p ON up.unique_paint_identifier = p.unique_paint_identifier "
+            "WHERE up.username = ? "
+            "GROUP BY p.brand "
+            "HAVING paint_count = ?",
+            (logname, max_paint_count)
+        )
+        favorite_brands_with_counts = cur.fetchall()
+        context['favorite_brands'] = [
+            {'brand': row['brand'], 'paint_count': row['paint_count']}
+            for row in favorite_brands_with_counts
+        ]
+    else:
+        context['favorite_brands'] = []
+
     return flask.render_template('toolbox.html', **context)
 
 
@@ -209,10 +240,44 @@ def mark_getting_low():
 
     return flask.redirect(flask.url_for('show_your_paints'))
 
+@makenmodel.app.route('/toolbox/remove_from_getting_low', methods=['POST'])
+def remove_from_getting_low():
+    '''Removes a paint from getting low'''
+
+    connection = makenmodel.model.get_db()
+
+    logname = flask.session['username']
+
+    data = flask.request.json
+
+    paint_brand = data.get('paint-brand')
+    paint_code = data.get('paint-code')
+    getting_low_status = 0
+
+    cur = connection.execute(
+        "SELECT unique_paint_identifier "
+        "FROM paints WHERE brand = ? AND paint_code = ?",
+        (paint_brand, paint_code)
+    )
+
+    unique_paint_identifier = cur.fetchone()['unique_paint_identifier']
+
+    connection.execute(
+        "UPDATE user_paints SET need_restock = ? "
+        "WHERE unique_paint_identifier = ? AND username = ?",
+        (getting_low_status, unique_paint_identifier, logname)
+    )
+
+    connection.commit()
+
+    return flask.redirect(flask.url_for('show_toolbox'))
+
+
+
 
 @makenmodel.app.route('/toolbox/getting_low/', methods=['GET'])
 def show_getting_low():
-
+    '''Shows the user what paints are getting low'''
     connection = makenmodel.model.get_db()
 
     logname = flask.session['username']
