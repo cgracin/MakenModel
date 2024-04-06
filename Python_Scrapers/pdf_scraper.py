@@ -8,6 +8,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 import time
 from urllib.parse import urljoin
+import pytesseract
+from pdf2image import convert_from_path
 
 PAGE_LINK_OUTPUT = 'model_page_links.output'
 MODEL_PDF_LINKS = 'pdf_links.output'
@@ -69,12 +71,37 @@ def extract_text():
     with open(MODEL_PDF_LINKS, 'r', encoding='utf-8') as links:
         for pdf_link in links.readlines():
             pdf_link = pdf_link.strip()
+            # Extract text from PDF
             pdf_text = extract_text_from_pdf_url(pdf_link)
-            if pdf_text:
+            # Extract text from image of PDF
+            image_text = extract_text_from_pdf_image(pdf_link)
+            # Combine the text
+            combined_text = pdf_text + image_text
+            if combined_text:
                 filename = pdf_link.split('/')[-1]
                 output_file_path = os.path.join(PDF_TEXT_FOLDER, filename + ".txt")
                 with open(output_file_path, 'w', encoding='utf-8') as text_file:
-                    text_file.write(pdf_text)
+                    text_file.write(combined_text)
+
+def extract_text_from_pdf_image(pdf_url):
+    base_url = "https://www.scalemates.com"
+    full_link = urljoin(base_url, pdf_url)
+    response = requests.get(full_link)
+    if response.status_code == 200:
+        with tempfile.NamedTemporaryFile(delete=True) as temp_file:
+            temp_file.write(response.content)
+            temp_file.flush()
+            # Convert the PDF to images
+            images = convert_from_path(temp_file.name)
+            extracted_text = ""
+            for image in images:
+                # Use pytesseract to perform OCR on the image
+                text = pytesseract.image_to_string(image)
+                extracted_text += text + "\n"
+            return extracted_text
+    else:
+        print("Failed to download PDF file:", pdf_url)
+        return ""
 
 def extract_text_from_pdf_url(pdf_url):
     base_url = "https://www.scalemates.com"
@@ -94,6 +121,7 @@ def extract_text_from_pdf_url(pdf_url):
     else:
         print("Failed to download PDF file:", pdf_url)
         return None
+
 
 def main():
     url = "https://www.scalemates.com/search.php?q=*&fkSECTION[]=Kits&fkCOMPNAME%5B%5D=%22Tamiya%22"
