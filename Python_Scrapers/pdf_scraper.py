@@ -10,6 +10,7 @@ import time
 from urllib.parse import urljoin
 import pytesseract
 from pdf2image import convert_from_path
+import shutil
 
 PAGE_LINK_OUTPUT = 'model_page_links.output'
 MODEL_PDF_LINKS = 'pdf_links.output'
@@ -71,17 +72,17 @@ def extract_text():
     with open(MODEL_PDF_LINKS, 'r', encoding='utf-8') as links:
         for pdf_link in links.readlines():
             pdf_link = pdf_link.strip()
-            # Extract text from PDF
-            pdf_text = extract_text_from_pdf_url(pdf_link)
+            # Extract num pages from PDF
+            num_pages = extract_num_pages_from_pdf_url(pdf_link)
             # Extract text from image of PDF
             image_text = extract_text_from_pdf_image(pdf_link)
-            # Combine the text
-            combined_text = pdf_text + image_text
-            if combined_text:
+
+            if image_text:
                 filename = pdf_link.split('/')[-1]
                 output_file_path = os.path.join(PDF_TEXT_FOLDER, filename + ".txt")
                 with open(output_file_path, 'w', encoding='utf-8') as text_file:
-                    text_file.write(combined_text)
+                    text_file.write(image_text + '\n\n\n\n')
+                    text_file.write(f'@#$@ {num_pages} @#$@')
 
 def extract_text_from_pdf_image(pdf_url):
     base_url = "https://www.scalemates.com"
@@ -103,7 +104,7 @@ def extract_text_from_pdf_image(pdf_url):
         print("Failed to download PDF file:", pdf_url)
         return ""
 
-def extract_text_from_pdf_url(pdf_url):
+def extract_num_pages_from_pdf_url(pdf_url):
     base_url = "https://www.scalemates.com"
     full_link = urljoin(base_url, pdf_url)
     response = requests.get(full_link)
@@ -113,14 +114,12 @@ def extract_text_from_pdf_url(pdf_url):
             temp_file.flush()
             with open(temp_file.name, 'rb') as pdf_file:
                 reader = PyPDF2.PdfFileReader(pdf_file)
-                text = ""
-                for page_num in range(reader.numPages):
-                    page = reader.getPage(page_num)
-                    text += page.extractText()
-                return text
+                num_pages = reader.numPages
+
+                return num_pages
     else:
         print("Failed to download PDF file:", pdf_url)
-        return None
+        return None, 0
 
 
 def main():
@@ -133,7 +132,11 @@ def main():
     elif mode == '-p':
         get_pdfs()
     elif mode == '-t':
+        if os.path.exists(PDF_TEXT_FOLDER):
+            print("Removing existing PDF text folder and files...")
+            shutil.rmtree(PDF_TEXT_FOLDER)
         extract_text()
+
 
 if __name__ == "__main__":
     main()
