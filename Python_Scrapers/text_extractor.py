@@ -10,24 +10,14 @@ from google.cloud import documentai
 import requests  # type: ignore
 
 # TODO(developer): Uncomment these variables before running the sample.
-project_id = "a25b9b0c1d131d1b"
-location = "us"  # Format is "us" or "eu"
-# file_path = "/path/to/local/pdf"
-processor_display_name = "makenmodel" # Must be unique per project, e.g.: "My Processor"
 
 PAGE_LINK_OUTPUT = "vehicle_model_links.output"
 MODEL_PDF_LINKS = "model_pdfs.output"
 PDF_TEXT_FOLDER = "pdf_extracted"
 
-def quickstart(
-    project_id: str,
-    location: str,
-    file_path: str,
-    processor_display_name: str = "My Processor",
-):
+def quickstart(project_id: str, location: str, file_path: str, processor_display_name: str = "My Processor",):
     # You must set the `api_endpoint`if you use a location other than "us".
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
-
     client = documentai.DocumentProcessorServiceClient(client_options=opts)
 
     # The full resource name of the location, e.g.:
@@ -114,26 +104,31 @@ def extract_text_from_pdf_image(pdf_url):
         return ""
 
 def main():
-    if os.path.exists(PDF_TEXT_FOLDER):
-        print("Removing existing PDF text folder and files...")
-        shutil.rmtree(PDF_TEXT_FOLDER)
-    # extract_text()
-    if not os.path.exists(PDF_TEXT_FOLDER):
-        os.makedirs(PDF_TEXT_FOLDER)
-    base_url = "https://www.scalemates.com"
+    project_id = "eecs486-makenmodel"
+    location = "us"  # Format is "us" or "eu"
+    file_path = "../pdf_extracted/100002-55-instructions.pdf"
+    processor_display_name = "makenmodel2" # Must be unique per project, e.g.: "My Processor"
+    quickstart(project_id, location, file_path, processor_display_name)
+    # if os.path.exists(PDF_TEXT_FOLDER):
+    #     print("Removing existing PDF text folder and files...")
+    #     shutil.rmtree(PDF_TEXT_FOLDER)
+    # # extract_text()
+    # if not os.path.exists(PDF_TEXT_FOLDER):
+    #     os.makedirs(PDF_TEXT_FOLDER)
+    # base_url = "https://www.scalemates.com"
 
-    with open(MODEL_PDF_LINKS, "r", encoding="utf-8") as file:
-        for link in file.readlines():
-            pdf_url = link.strip()
-            full_link = urljoin(base_url, pdf_url)
-            response = requests.get(full_link)
-            if response.status_code == 200:
-                filename = pdf_url.split("/")[-1]
-                output_file_path = os.path.join(PDF_TEXT_FOLDER, filename)
-                with open(output_file_path, "wb") as pdf:
-                    pdf.write(response.content)
-            else:
-                print(f"Failed to download PDF: {pdf_url}")
+    # with open(MODEL_PDF_LINKS, "r", encoding="utf-8") as file:
+    #     for link in file.readlines():
+    #         pdf_url = link.strip()
+    #         full_link = urljoin(base_url, pdf_url)
+    #         response = requests.get(full_link)
+    #         if response.status_code == 200:
+    #             filename = pdf_url.split("/")[-1]
+    #             output_file_path = os.path.join(PDF_TEXT_FOLDER, filename)
+    #             with open(output_file_path, "wb") as pdf:
+    #                 pdf.write(response.content)
+    #         else:
+    #             print(f"Failed to download PDF: {pdf_url}")
 
 
 if __name__ == "__main__":
