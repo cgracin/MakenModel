@@ -12,8 +12,8 @@ import requests  # type: ignore
 # TODO(developer): Uncomment these variables before running the sample.
 project_id = "a25b9b0c1d131d1b"
 location = "us"  # Format is "us" or "eu"
-file_path = "/path/to/local/pdf"
-processor_display_name = "YOUR_PROCESSOR_DISPLAY_NAME" # Must be unique per project, e.g.: "My Processor"
+# file_path = "/path/to/local/pdf"
+processor_display_name = "makenmodel" # Must be unique per project, e.g.: "My Processor"
 
 PAGE_LINK_OUTPUT = "vehicle_model_links.output"
 MODEL_PDF_LINKS = "model_pdfs.output"
