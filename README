@@ -63,3 +63,8 @@ flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
 
     - golden_standard.txt
         - This file is our golden_standard for training and testing the accuracy of our instruction classifier algorithm
+
+    - scale_rating.txt
+        - Models come in several scales, and typically the larger the model, the more difficult it is
+        - This file maps common scale sizes to a value between 0-1 based on how much we interpret the scale to impact the difficulty of the model
+        - If the 
