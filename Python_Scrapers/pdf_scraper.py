@@ -1,32 +1,34 @@
 import os
 import sys
 import requests
-import PyPDF2
-import tempfile
 from bs4 import BeautifulSoup
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 import time
 from urllib.parse import urljoin
-import pytesseract
-from pdf2image import convert_from_path
-import shutil
+import os
+from google.cloud import storage
+import json
 
-# PAGE_LINK_OUTPUT = 'model_page_links.output'
-# MODEL_PDF_LINKS = "pdf_links.output"
-PAGE_LINK_OUTPUT = 'vehicle_model_links.output'
-MODEL_PDF_LINKS = 'model_pdfs.output'
+PAGE_LINK_OUTPUT = 'model_page_links.output'
+MODEL_PDF_LINKS = 'pdf_links.output'
 PDF_TEXT_FOLDER = 'pdf_texts'
 
-def get_model_urls(page_url):
+BUCKET_NAME = "makenmodel_extractedpdfs"
+EXTRACTED_PDF_FOLDER = "json_extracted"
+
+def get_model_urls():
+    """Retrieval all relevant models from Scale Mates."""
     if os.path.exists(PAGE_LINK_OUTPUT):
         print("Model links already exist. Skipping scraping.")
         return
 
+    url = "https://www.scalemates.com/search.php?q=tamiya&fkSECTION[]=Kits&fkCOMPNAME[]=%22Tamiya%22&fkTYPENAME[]=%22Full%20kits%22&fkGROUPS[]=%22Ships%22&fkGROUPS[]=%22Aircraft%22&fkGROUPS[]=%22Vehicles%22&fkGROUPS[]=%22Space%22&fkGROUPS[]=%22Trains%22"
     driver = webdriver.Chrome(ChromeDriverManager().install())
-    driver.get(page_url)
+    driver.get(url)
     last_height = driver.execute_script("return document.body.scrollHeight")
 
+    # for infinite scrolling
     while True:
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(0.5)
@@ -38,19 +40,20 @@ def get_model_urls(page_url):
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     divs = soup.find_all('div', class_='ac dg bgl cc pr mt4')
 
+    # find all model page links on scale mates search page
     with open(PAGE_LINK_OUTPUT, 'w', encoding='utf-8') as output:
         for div in divs:
             link = div.find('a', class_='pf')['href']
             output.write(link + '\n')
 
 def get_pdfs():
-
+    """Get links for model PDF instructions."""
     with open(MODEL_PDF_LINKS, 'w', encoding='utf-8') as out:
         out.write('')
 
     with open(PAGE_LINK_OUTPUT, 'r', encoding='utf-8') as links:
         page_links = [link.strip() for link in links.readlines()]
-        
+
     for link in page_links:
         base_url = "https://www.scalemates.com"
         full_link = urljoin(base_url, link)
@@ -63,82 +66,39 @@ def get_pdfs():
                 with open(MODEL_PDF_LINKS, 'a', encoding='utf-8') as output:
                     output.write(pdf_link + '\n')
 
-def extract_text():
-    if not os.path.exists(MODEL_PDF_LINKS):
-        print("PDF links file not found. Please run the script with -p option first.")
-        return
 
-    if not os.path.exists(PDF_TEXT_FOLDER):
-        os.makedirs(PDF_TEXT_FOLDER)
+def download_text():
+    """Download processed JSONs from Cloud Storage."""
+    if not os.path.exists(EXTRACTED_PDF_FOLDER):
+        os.makedirs(EXTRACTED_PDF_FOLDER)
 
-    with open(MODEL_PDF_LINKS, 'r', encoding='utf-8') as links:
-        for pdf_link in links.readlines():
-            pdf_link = pdf_link.strip()
-            # Extract num pages from PDF
-            num_pages = extract_num_pages_from_pdf_url(pdf_link)
-            # Extract text from image of PDF
-            image_text = extract_text_from_pdf_image(pdf_link)
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(BUCKET_NAME)
+    blobs = storage_client.list_blobs(BUCKET_NAME)
 
-            if image_text:
-                filename = pdf_link.split('/')[-1]
-                output_file_path = os.path.join(PDF_TEXT_FOLDER, filename + ".txt")
-                with open(output_file_path, 'w', encoding='utf-8') as text_file:
-                    text_file.write(image_text + '\n\n\n\n')
-                    text_file.write(f'@#$@ {num_pages} @#$@')
+    json_paths = []
+    for blob in blobs:
+        name = (blob.name).split("-")
+        if name[-1] == "0.json":
+            json_paths.append(blob.name)
 
-def extract_text_from_pdf_image(pdf_url):
-    base_url = "https://www.scalemates.com"
-    full_link = urljoin(base_url, pdf_url)
-    response = requests.get(full_link)
-    if response.status_code == 200:
-        with tempfile.NamedTemporaryFile(delete=True) as temp_file:
-            temp_file.write(response.content)
-            temp_file.flush()
-            # Convert the PDF to images
-            images = convert_from_path(temp_file.name)
-            extracted_text = ""
-            for image in images:
-                # Use pytesseract to perform OCR on the image
-                text = pytesseract.image_to_string(image)
-                extracted_text += text + "\n"
-            return extracted_text
-    else:
-        print("Failed to download PDF file:", pdf_url)
-        return ""
-
-def extract_num_pages_from_pdf_url(pdf_url):
-    base_url = "https://www.scalemates.com"
-    full_link = urljoin(base_url, pdf_url)
-    response = requests.get(full_link)
-    if response.status_code == 200:
-        with tempfile.NamedTemporaryFile(delete=True) as temp_file:
-            temp_file.write(response.content)
-            temp_file.flush()
-            with open(temp_file.name, 'rb') as pdf_file:
-                reader = PyPDF2.PdfFileReader(pdf_file)
-                num_pages = reader.numPages
-
-                return num_pages
-    else:
-        print("Failed to download PDF file:", pdf_url)
-        return None, 0
-
+    for path in json_paths:
+        file = bucket.blob(path)
+        json_file = json.loads(file.download_as_string())
+        blob_name = (file.name).split("/")[-1]
+        remote_file = os.path.join(EXTRACTED_PDF_FOLDER, blob_name)
+        with open(remote_file, "w") as output:
+            json.dump(json_file, output)
 
 def main():
-    # url = "https://www.scalemates.com/search.php?q=*&fkSECTION[]=Kits&fkCOMPNAME%5B%5D=%22Tamiya%22"
-    url = "https://www.scalemates.com/search.php?q=tamiya&fkSECTION[]=Kits&fkCOMPNAME[]=%22Tamiya%22&fkTYPENAME[]=%22Full%20kits%22&fkGROUPS[]=%22Ships%22&fkGROUPS[]=%22Aircraft%22&fkGROUPS[]=%22Vehicles%22&fkGROUPS[]=%22Space%22&fkGROUPS[]=%22Trains%22"
-
     mode = sys.argv[1]
 
     if mode == '-u':
-        get_model_urls(url)
+        get_model_urls()
     elif mode == '-p':
         get_pdfs()
     elif mode == '-t':
-        if os.path.exists(PDF_TEXT_FOLDER):
-            print("Removing existing PDF text folder and files...")
-            shutil.rmtree(PDF_TEXT_FOLDER)
-        extract_text()
+        download_text()
 
 
 if __name__ == "__main__":

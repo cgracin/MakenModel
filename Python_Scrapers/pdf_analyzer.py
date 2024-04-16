@@ -12,7 +12,6 @@ import sqlite3
 # 2. Get total colors from pdf
 # 3. Calculate color score
 
-
 def main():
     """Getting color codes to clean pdfs."""
     # Paints to grab: Tamiya, Tamiya Color Laqcuer Paint, Tamiya Paint Markers, Tamiya Polycarb Marker
