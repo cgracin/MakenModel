@@ -16,20 +16,33 @@ import sqlite3
 def main():
     """Getting color codes to clean pdfs."""
     # Paints to grab: Tamiya, Tamiya Color Laqcuer Paint, Tamiya Paint Markers, Tamiya Polycarb Marker
-    # paints_grab_list = ["Tamiya", "Tamiya Color Lacquer Paint", "Tamiya Paint Markers", "Tamiya Polycarb Marker"]
+    paints_grab_list = ["Tamiya", "Tamiya Color Lacquer Paint", "Tamiya Paint Markers", "Tamiya Polycarb Marker"]
     # # Opening JSON file
-    # with open(os.path.join('scraping_data/paint_scrape_data.json'), 'r', encoding='UTF-8') as paint_data:
-    #     data = json.load(paint_data)
-    #     color_codes = get_color_codes_json(data, paints_grab_list)
-    #     #print(color_codes)
+    with open(os.path.join('scraping_data/paint_scrape_data.json'), 'r', encoding='utf-8') as paint_data:
+        data = json.load(paint_data)
+        color_codes = get_color_codes_json(data, paints_grab_list)
 
-    # instruction_folder = "pdf_texts"
+    instruction_folder = "pdf_texts"
 
-    # get_parts_and_paints_from_instructions()
+    get_parts_and_paints_from_instructions(instruction_folder)
 
-    get_user_paints()
+    # color_codes = get_color_codes_json()
+
+    # get_user_paints()
 
     return None
+
+def extract_json_from_file(file_path):
+    with open(file_path, 'r', encoding='iso-8859-1') as file:
+        file_content = file.read()
+
+        # If the JSON data is always enclosed within {} braces
+        matches = re.findall(r'\{.*?\}', file_content, re.DOTALL)
+        if matches:
+            # Assuming the first match is the JSON content
+            json_str = matches[0]
+            return json_str
+        return None
 
 def get_color_codes_json(data, paint_types):
     """Getting color codes from Json."""
@@ -43,8 +56,7 @@ def get_color_codes_json(data, paint_types):
 
 
 
-def get_parts_and_paints_from_instructions():
-    directory = "pdf_texts"
+def get_parts_and_paints_from_instructions(directory):
 
     files = os.listdir(directory)
 
@@ -52,16 +64,19 @@ def get_parts_and_paints_from_instructions():
 
         path = os.path.join(directory, file)
 
-        with open(path, 'r', encoding='utf-8') as open_file:
-            text = open_file.read()
+        try:
+            json_str = extract_json_from_file(path)
+            if json_str:
+                # Parse the JSON data
+                json_data = json.loads(json_str)
 
-        pattern = r'\b[A-Za-z]{1}[A-Za-z]-?\d+\b'
+                text_content = json_data['text']
 
-        # Find all matches of the pattern in the text
-        matches = re.findall(pattern, text)
+                print(text_content)
 
-        print(path, matches)
-
+        except json.JSONDecodeError as e:
+            # Print the spot where JSON parsing is failing.
+            print(f"Error in file {path}: {str(e)}")
 
 def dict_factory(cursor, row):
     """Convert database row objects to a dictionary keyed on column name.
@@ -98,4 +113,4 @@ def get_user_paints():
     return codes
 
 if __name__ == "__main__":
-    get_user_paints()
+    main()
