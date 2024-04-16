@@ -42,7 +42,7 @@ def main():
             text_langs, num_pages = get_info_from_json(json_data["pages"])
 
             json_text = get_parts_and_paints_from_instructions(json_text)
-            processed_text = get_en_text(json_text, text_langs)
+            # processed_text = get_en_text(json_text, text_langs)
 
 
 if __name__ == "__main__":
