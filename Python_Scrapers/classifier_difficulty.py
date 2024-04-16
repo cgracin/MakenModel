@@ -1,7 +1,6 @@
 # NEED:
 # parts / page
 # paints / parts
-#
 
 # HAVE:
 # scale score
