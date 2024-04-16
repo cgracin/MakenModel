@@ -2,7 +2,7 @@ import sys
 import os
 import json
 from classifier_paint_part import *
-from classifier_language import *
+from text_preprocessor import *
 
 EXTRACTED_JSON_FOLDER = "json_extracted"
 
@@ -43,6 +43,7 @@ def main():
 
             processed_text = get_parts_and_paints_from_instructions(json_text)
             processed_text = get_en_text(json_text, text_langs)
+            # text_tokens = 
 
 
 if __name__ == "__main__":

@@ -15,3 +15,6 @@ def get_en_text(pdf_text, langs):
                 nl += word + ' '
         en_lines.append(nl)
     return ' '.join([line.strip() for line in en_lines if line != ''])
+
+def preprocess_text(pdf_text):
+    
