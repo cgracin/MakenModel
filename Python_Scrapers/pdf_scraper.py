@@ -11,10 +11,12 @@ from google.cloud import storage
 import json
 import re
 
+
+PDF_TEXT_FOLDER = 'pdf_texts'
+SCALE_DIFF_SCORES = 'data/scale_ratings.txt'
 PAGE_LINK_OUTPUT = 'model_page_links.output'
 MODEL_PDF_LINKS = 'pdf_links.output'
 MODEL_SPEC_INFO = 'model_specs.output'
-SCALE_DIFF_SCORES = ''
 EXTRACTED_PDF_FOLDER = "json_extracted"
 
 def get_model_urls():
@@ -78,6 +80,12 @@ def get_specs():
     with open(PAGE_LINK_OUTPUT, 'r', encoding='utf-8') as links:
         page_links = [link.strip() for link in links.readlines()]
 
+    with open(SCALE_DIFF_SCORES, 'r', encoding='utf-8') as ratings:
+        scale_diffs = {}
+        for line in ratings.readlines():
+            line = line.strip().split()
+            scale_diffs[line[0]] = line[1]
+
     for link in page_links:
         base_url = "https://www.scalemates.com"
         full_link = urljoin(base_url, link)
@@ -87,10 +95,20 @@ def get_specs():
             soup = BeautifulSoup(page.text, 'html.parser')
 
             specs = soup.find('dd', class_='p4').text.strip()
-            title = re.search("Title:.*Number", specs).group()[6:-6]
-            scale = re.search("Scale:.*Type", specs).group()[6:-4]
+            title = re.search("Title:.*Number", specs)
+            if title:
+                title = title.group()[6:-6].strip()
+            else:
+                title = ''
+            scale = re.search("Scale:.*Type", specs)
+            if scale:
+                scale = scale.group()[6:-4].strip()
+            else:
+                scale = ''
+
+            diff = scale_diffs.get(scale, '0')
             with open(MODEL_SPEC_INFO, 'a', encoding='utf-8') as output:
-                output.write(title + ', ' + scale + '\n')
+                output.write(link + '\t' + title + '\t' + scale + '\t' + diff + '\n')
 
 def get_json():
     """Download processed JSONs from Cloud Storage"""
