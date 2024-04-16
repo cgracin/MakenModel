@@ -80,11 +80,12 @@ def get_specs():
     with open(PAGE_LINK_OUTPUT, 'r', encoding='utf-8') as links:
         page_links = [link.strip() for link in links.readlines()]
 
-    with open(SCALE_DIFF_SCORES, 'r', encoding='utf-8') as ratings:
-        scale_diffs = {}
-        for line in ratings.readlines():
-            line = line.strip().split()
-            scale_diffs[line[0]] = line[1]
+    # NOTE: we should do this at a different point when we have all scales
+    # with open(SCALE_DIFF_SCORES, 'r', encoding='utf-8') as ratings:
+    #     scale_diffs = {}
+    #     for line in ratings.readlines():
+    #         line = line.strip().split()
+    #         scale_diffs[line[0]] = line[1]
 
     for link in page_links:
         base_url = "https://www.scalemates.com"
@@ -93,22 +94,26 @@ def get_specs():
 
         if page.status_code == 200:
             soup = BeautifulSoup(page.text, 'html.parser')
+            download_link = soup.find(
+                "a", href=True, title="Download Instruction Plans"
+            )
+            if download_link:
+                pdf_link = download_link["href"]
 
-            specs = soup.find('dd', class_='p4').text.strip()
-            title = re.search("Title:.*Number", specs)
-            if title:
-                title = title.group()[6:-6].strip()
-            else:
-                title = ''
-            scale = re.search("Scale:.*Type", specs)
-            if scale:
-                scale = scale.group()[6:-4].strip()
-            else:
-                scale = ''
+                specs = soup.find('dd', class_='p4').text.strip()
+                title = re.search("Title:.*Number", specs)
+                if title:
+                    title = title.group()[6:-6].strip()
+                else:
+                    title = 'x'
+                scale = re.search("Scale:.*Type", specs)
+                if scale:
+                    scale = scale.group()[6:-4].strip()
+                else:
+                    scale = 'x'
 
-            diff = scale_diffs.get(scale, '0')
-            with open(MODEL_SPEC_INFO, 'a', encoding='utf-8') as output:
-                output.write(link + '\t' + title + '\t' + scale + '\t' + diff + '\n')
+                with open(MODEL_SPEC_INFO, 'a', encoding='utf-8') as output:
+                    output.write(link + '\t' + pdf_link + '\t' + title + '\t' + scale + '\n')
 
 def get_json():
     """Download processed JSONs from Cloud Storage"""
