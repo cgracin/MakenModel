@@ -16,16 +16,18 @@ def retrieve_json(file_path):
             return None
         return json_file
 
-def get_detected_langs(json_pages):
+def get_info_from_json(json_pages):
     """Retrieve translated languages from JSON"""
     languages = set()
+    num_pages = json_pages[-1]["pageNumber"]
     for pages in json_pages:
-        detected_langs = pages["detectedLanguages"]
-        for lang in detected_langs:
-            lang_code = lang["languageCode"]
-            if lang_code != "en":
-                languages.add(lang_code)
-    return languages
+        if "detectedLanguages" in pages.keys():
+            detected_langs = pages["detectedLanguages"]
+            for lang in detected_langs:
+                lang_code = lang["languageCode"]
+                if lang_code != "en":
+                    languages.add(lang_code)
+    return languages, num_pages
 
 def main():
     """Analyze extracted PDF text"""
@@ -37,7 +39,7 @@ def main():
         json_data = retrieve_json(path)
         if json_data:
             json_text = json_data["text"]
-            text_langs = get_detected_langs(json_data["pages"])
+            text_langs, num_pages = get_info_from_json(json_data["pages"])
 
             json_text = get_parts_and_paints_from_instructions(json_text)
             processed_text = get_en_text(json_text, text_langs)
