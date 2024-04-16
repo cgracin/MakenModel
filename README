@@ -30,6 +30,27 @@ flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
         - Scraped data is stored in JSON format
             - File located at:
                 scraping_data/paint_scrape_data.json
+    
+    pdf_scraper.py
+        TO RUN:
+            $ python3 Python_Scrapers/pdf_scraper.py [mode]
+        
+        - This program scapes the website: https://www.scalemates.com/search.php?q=tamiya&fkSECTION[]=Kits&fkCOMPNAME[]=%22Tamiya%22&fkTYPENAME[]=%22Full%20kits%22&fkGROUPS[]=%22Ships%22&fkGROUPS[]=%22Aircraft%22&fkGROUPS[]=%22Vehicles%22&fkGROUPS[]=%22Space%22&fkGROUPS[]=%22Trains%22
+            - Filters:
+                Brand: Tamiya
+                Product Type: Full kits
+                Groups: Ships, Aircraft, Vehicles, Space, Trains
+        - Available modes to run the program:
+            -u: (run before other modes) Scrapes scalemates page to retrieve links to relevant models
+            -p: Get instruction pdf links, if available, from model pages
+            -s: Get model scale specifications from model pages 
+            -t: Download processed JSON files from Google Cloud Storage
+                - Extracting text from PDFs done with Document AI and the extracted JSONs are stored in Google Cloud Storage
+        - Output Files:
+            -u: model_page_links.output
+            -p: pdf_links.output
+            -s: model_specs.output
+            -t: json_extracted/*
 
     pdf_analyzer.py
         TO RUN:

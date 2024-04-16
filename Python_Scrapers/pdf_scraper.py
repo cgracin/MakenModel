@@ -9,22 +9,16 @@ from urllib.parse import urljoin
 import os
 from google.cloud import storage
 import json
-import pytesseract
-from pdf2image import convert_from_path
-import shutil
 import re
 
 PAGE_LINK_OUTPUT = 'model_page_links.output'
 MODEL_PDF_LINKS = 'pdf_links.output'
 MODEL_SPEC_INFO = 'model_specs.output'
-PDF_TEXT_FOLDER = 'pdf_texts'
 SCALE_DIFF_SCORES = ''
-
-BUCKET_NAME = "makenmodel_extractedpdfs"
 EXTRACTED_PDF_FOLDER = "json_extracted"
 
 def get_model_urls():
-    """Retrieval all relevant models from Scale Mates."""
+    """Retrieval all relevant models from Scale Mates"""
     if os.path.exists(PAGE_LINK_OUTPUT):
         print("Model links already exist. Skipping scraping.")
         return
@@ -52,8 +46,32 @@ def get_model_urls():
             link = div.find('a', class_='pf')['href']
             output.write(link + '\n')
 
-def get_specs():
 
+def get_pdfs():
+    """Get links for model PDF instructions"""
+    with open(MODEL_PDF_LINKS, "w", encoding="utf-8") as out:
+        out.write("")
+
+    with open(PAGE_LINK_OUTPUT, "r", encoding="utf-8") as links:
+        page_links = [link.strip() for link in links.readlines()]
+
+    for link in page_links:
+        base_url = "https://www.scalemates.com"
+        full_link = urljoin(base_url, link)
+        page = requests.get(full_link)
+        if page.status_code == 200:
+            soup = BeautifulSoup(page.text, "html.parser")
+            download_link = soup.find(
+                "a", href=True, title="Download Instruction Plans"
+            )
+            if download_link:
+                pdf_link = download_link["href"]
+                with open(MODEL_PDF_LINKS, "a", encoding="utf-8") as output:
+                    output.write(pdf_link + "\n")
+
+
+def get_specs():
+    """Get model size specifications from model page"""
     with open(MODEL_SPEC_INFO, 'w', encoding='utf-8') as out:
         out.write('')
 
@@ -71,39 +89,18 @@ def get_specs():
             specs = soup.find('dd', class_='p4').text.strip()
             title = re.search("Title:.*Number", specs).group()[6:-6]
             scale = re.search("Scale:.*Type", specs).group()[6:-4]
-            with open ()
             with open(MODEL_SPEC_INFO, 'a', encoding='utf-8') as output:
                 output.write(title + ', ' + scale + '\n')
 
-def get_pdfs():
-    """Get links for model PDF instructions."""
-    with open(MODEL_PDF_LINKS, 'w', encoding='utf-8') as out:
-        out.write('')
-
-    with open(PAGE_LINK_OUTPUT, 'r', encoding='utf-8') as links:
-        page_links = [link.strip() for link in links.readlines()]
-
-    for link in page_links:
-        base_url = "https://www.scalemates.com"
-        full_link = urljoin(base_url, link)
-        page = requests.get(full_link)
-        if page.status_code == 200:
-            soup = BeautifulSoup(page.text, 'html.parser')
-            download_link = soup.find('a', href=True, title="Download Instruction Plans")
-            if download_link:
-                pdf_link = download_link['href']
-                with open(MODEL_PDF_LINKS, 'a', encoding='utf-8') as output:
-                    output.write(pdf_link + '\n')
-
-
-def download_text():
-    """Download processed JSONs from Cloud Storage."""
+def get_json():
+    """Download processed JSONs from Cloud Storage"""
     if not os.path.exists(EXTRACTED_PDF_FOLDER):
         os.makedirs(EXTRACTED_PDF_FOLDER)
 
+    bucket_name = "makenmodel_extractedpdfs"
     storage_client = storage.Client()
-    bucket = storage_client.bucket(BUCKET_NAME)
-    blobs = storage_client.list_blobs(BUCKET_NAME)
+    bucket = storage_client.bucket(bucket_name)
+    blobs = storage_client.list_blobs(bucket_name)
 
     json_paths = []
     for blob in blobs:
@@ -129,7 +126,7 @@ def main():
     elif mode == '-s':
         get_specs()
     elif mode == '-t':
-        download_text()
+        get_json()
 
 
 if __name__ == "__main__":
