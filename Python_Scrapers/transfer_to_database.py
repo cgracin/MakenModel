@@ -60,15 +60,7 @@ def transfer_paint_data():
 
 def main():
 
-    function = sys.argv[1]
-
-    # If you only want to transfer paint data
-    if function == 'transfer_paint':
-        transfer_paint_data()
-
-    # If you want to transfer all scraped data
-    elif function == 'all':
-        transfer_paint_data()
+    transfer_paint_data()
 
 
 if __name__ == '__main__':

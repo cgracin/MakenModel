@@ -18,3 +18,23 @@ flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
 
         - This program scrapes the website: https://www.modelshade.com/paint-conversion-chart/tamiya
         - Gathers the conversions from Tamiya Paint colors to other brands of paint
+
+    paint_scraper.py
+        TO RUN:
+            $ python3 Python_Scrapers/paint_scraper.py
+
+        - This program scrapes the website: https://www.scalemates.com/colors/?ranges=all
+        - This gathers all available paints a user could possibly have
+            - This is used to autofill suggestions when a user is adding paints to their collection
+            - Also used as a reference when a conversion needs to be made from a Tamiya Paint to a paint of another brand
+        - Scraped data is stored in JSON format
+            - File located at:
+                scraping_data/paint_scrape_data.json
+
+        pdf_analyzer.py
+            TO RUN:
+             $ python3 Python_Scrapers/pdf_analyzer.py
+
+            TODO: EXPLANATION
+
+
