@@ -9,10 +9,16 @@ from urllib.parse import urljoin
 import os
 from google.cloud import storage
 import json
+import pytesseract
+from pdf2image import convert_from_path
+import shutil
+import re
 
 PAGE_LINK_OUTPUT = 'model_page_links.output'
 MODEL_PDF_LINKS = 'pdf_links.output'
+MODEL_SPEC_INFO = 'model_specs.output'
 PDF_TEXT_FOLDER = 'pdf_texts'
+SCALE_DIFF_SCORES = ''
 
 BUCKET_NAME = "makenmodel_extractedpdfs"
 EXTRACTED_PDF_FOLDER = "json_extracted"
@@ -45,6 +51,29 @@ def get_model_urls():
         for div in divs:
             link = div.find('a', class_='pf')['href']
             output.write(link + '\n')
+
+def get_specs():
+
+    with open(MODEL_SPEC_INFO, 'w', encoding='utf-8') as out:
+        out.write('')
+
+    with open(PAGE_LINK_OUTPUT, 'r', encoding='utf-8') as links:
+        page_links = [link.strip() for link in links.readlines()]
+
+    for link in page_links:
+        base_url = "https://www.scalemates.com"
+        full_link = urljoin(base_url, link)
+        page = requests.get(full_link)
+
+        if page.status_code == 200:
+            soup = BeautifulSoup(page.text, 'html.parser')
+
+            specs = soup.find('dd', class_='p4').text.strip()
+            title = re.search("Title:.*Number", specs).group()[6:-6]
+            scale = re.search("Scale:.*Type", specs).group()[6:-4]
+            with open ()
+            with open(MODEL_SPEC_INFO, 'a', encoding='utf-8') as output:
+                output.write(title + ', ' + scale + '\n')
 
 def get_pdfs():
     """Get links for model PDF instructions."""
@@ -97,6 +126,8 @@ def main():
         get_model_urls()
     elif mode == '-p':
         get_pdfs()
+    elif mode == '-s':
+        get_specs()
     elif mode == '-t':
         download_text()
 
