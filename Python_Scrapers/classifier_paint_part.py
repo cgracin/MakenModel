@@ -33,7 +33,7 @@ def get_color_codes_json(data, paint_types):
 
 
 def get_parts_and_paints_from_instructions(pdf_text):
-    return idk
+    return 
 
 
 def dict_factory(cursor, row):
