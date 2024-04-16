@@ -9,7 +9,6 @@ import time
 
 def main():
     # Get the page
-    url = "https://www.modelshade.com/paint-conversion-chart/tamiya/XF-1"
 
     with open('paint_conversion.output', 'w', encoding='utf-8') as output:
         with open('paint_conversion_links.txt', 'r', encoding='utf-8') as paint_links:
