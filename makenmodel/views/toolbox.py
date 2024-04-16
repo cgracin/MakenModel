@@ -73,7 +73,7 @@ def show_toolbox():
     max_paint_count = max_paint_count_row['max_paint_count'] if max_paint_count_row else 0
 
     # If there's at least one paint, identify all brands with this maximum count
-    if max_paint_count > 0:
+    if max_paint_count and max_paint_count > 0:
         cur = connection.execute(
             "SELECT p.brand, COUNT(up.unique_paint_identifier) AS paint_count "
             "FROM user_paints up "
@@ -152,8 +152,9 @@ def add_paints():
 
     paint_type = paint_info[-1]
 
-    paint_info.pop(0)
-    paint_info.pop(-1)
+    # paint_info.pop(0)
+    # paint_info.pop(-1)
+    paint_info.clear()
 
     paint_name = (' ').join(paint_info)
     # slice off the ()
