@@ -1,6 +1,7 @@
-/kits/tamiya-35070-m3a2-half-track--130064  easy
-/kits/tamiya-mt126-tiger-i--441138  easy
-/kits/tamiya-14020-suzuki-gsx750-police-bike--122923    medium
-/kits/tamiya-14001-yamaha-yzr500-grand-prix-racer--129730   medium
-/kits/tamiya-35102-20mm-flak38-mit-sdah51--1112074  easy
-/kits/tamiya-89596-porsche-911-gt3-metal-plated-body--1451485   medium
+/kits/tamiya-35070-m3a2-half-track--130064 easy
+/kits/tamiya-mt126-tiger-i--441138 easy
+/kits/tamiya-14020-suzuki-gsx750-police-bike--122923 medium
+/kits/tamiya-14001-yamaha-yzr500-grand-prix-racer--129730 medium
+/kits/tamiya-35102-20mm-flak38-mit-sdah51--1112074 easy
+/kits/tamiya-89596-porsche-911-gt3-metal-plated-body--1451485 medium
+/kits/tamiya-12033-renault-re-20-turbo--1412406 hard
