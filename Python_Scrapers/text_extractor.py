@@ -1,40 +1,36 @@
 import os
-import shutil
-import tempfile
-from urllib.parse import urljoin
-import pytesseract
-from pdf2image import convert_from_path
-import PyPDF2
-from google.api_core.client_options import ClientOptions
-from google.cloud import documentai
 from google.cloud import storage
-import requests  # type: ignore
+import json
 
-PAGE_LINK_OUTPUT = "vehicle_model_links.output"
-MODEL_PDF_LINKS = "model_pdfs.output"
-PDF_PROCESSED_FOLDER = "pdf_preprocessed"
+BUCKET_NAME = "makenmodel_extractedpdfs"
+EXTRACTED_PDF_FOLDER = "json_extracted"
 
-def list_blobs():
+def extract_text():
     """Lists all the blobs in the bucket."""
-    bucket_name = "makenmodel-pdf"
-
     storage_client = storage.Client()
+    bucket = storage_client.bucket(BUCKET_NAME)
+    blobs = storage_client.list_blobs(BUCKET_NAME)
 
-    # Note: Client.list_blobs requires at least package version 1.17.0.
-    blobs = storage_client.list_blobs(bucket_name)
-
-    # Note: The call returns a response only when the iterator is consumed.
+    json_paths = []
     for blob in blobs:
-        print(blob.name)
+        name = (blob.name).split("-")
+        if name[-1] == "0.json": 
+            json_paths.append(blob.name)
 
-
+    for path in json_paths:
+        file = bucket.blob(path)
+        json_file = json.loads(file.download_as_string())
+        blob_name = (file.name).split("/")[-1]
+        remote_file = os.path.join(EXTRACTED_PDF_FOLDER, blob_name)
+        with open(remote_file, "w") as output:
+            json.dump(json_file, output)
 
 
 def main():
-    if not os.path.exists(PDF_PROCESSED_FOLDER):
-        os.makedirs(PDF_PROCESSED_FOLDER)
+    if not os.path.exists(EXTRACTED_PDF_FOLDER):
+        os.makedirs(EXTRACTED_PDF_FOLDER)
 
-    list_blobs()
+    extract_text()
 
 
 if __name__ == "__main__":
