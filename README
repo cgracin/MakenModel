@@ -46,3 +46,20 @@ flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
         - ONLY RUN ONCE after paint_scraper.py is run
 
 
+<!-- langtest.py -->
+
+    TODO: DREW
+
+    TO RUN: -----
+        $
+
+    - This is used to .......
+
+
+
+<!-- DATA folder -->
+
+    This folder holds all of the extraneous data that we need/use in our program
+
+    - golden_standard.txt
+        - This file is our golden_standard for training and testing the accuracy of our instruction classifier algorithm
