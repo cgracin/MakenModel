@@ -13,6 +13,8 @@ flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
 <!-- PYTHON SCRAPERS EXPLANATION -->
 
     conversion_scraper.py
+        TO RUN:
+            $ python3 Python_Scrapers/conversion_scraper.py
+
         - This program scrapes the website: https://www.modelshade.com/paint-conversion-chart/tamiya
         - Gathers the conversions from Tamiya Paint colors to other brands of paint
-        
