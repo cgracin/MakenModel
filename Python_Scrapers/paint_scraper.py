@@ -5,10 +5,6 @@ import json
 
 # pylint: disable=C0103
 
-url = 'https://www.scalemates.com/colors/?ranges=all'
-
-base_url = 'https://www.scalemates.com'
-
 # INPUT:
 # page_url: url of an individual brands page (string)
 
@@ -18,24 +14,19 @@ base_url = 'https://www.scalemates.com'
 #             [[paint_code, paint_color, background_color, shine_type,
 #               type_paint], ...]
 def get_page_paints(page_url):
-    '''This gets the paints for an individual paints page'''
+    """Get paints for an individual paints page."""
 
     page = requests.get(page_url)
-
     soup = BeautifulSoup(page.text, features='html.parser')
-
-
-    paint_list = []
 
     brand = soup.find('h1')
     brand = brand.text
-
     divs = soup.find_all('div', class_='ac dg bgl cc pr mt4')
 
+    paint_list = []
     avoid_dupes = set()
 
     for div in divs:
-
         style_attr = div.find('div', style=True)
         style_list = style_attr['style'].split(';') if style_attr else None
 
@@ -55,24 +46,20 @@ def get_page_paints(page_url):
         paint_color = None
 
         for a_tag in a_tags:
-
             span = a_tag.find('span')
             if span:
                 paint_color = ''.join(text for text in a_tag.stripped_strings if text != span.get_text(strip=True))
-
 
         shine_type = div.find('div', class_='ccf center dib nw bgn')
         type_paint = div.find('div', class_='cct center dib nw bgg')
 
         if not type_paint:
             type_paint = div.find('div', class_='cct center dib nw bgb')
-
         if not type_paint:
             type_paint = div.find('div', class_='cct center dib nw bgo')
 
         shine_type = shine_type.text if shine_type else None
         type_paint = type_paint.text if type_paint else None
-
 
         if paint_code and paint_color:
             # This is a group that makes sure we don't add same paint to data twice
@@ -88,46 +75,42 @@ def get_page_paints(page_url):
                 paint_list.append(data)
                 avoid_dupes.add(dupe_criteria)
 
-
     return brand, paint_list
 
+def main():
+    base_page = requests.get(url)
+    base_soup = BeautifulSoup(base_page.text, features='html.parser')
 
-base_page = requests.get(url)
+    links = base_soup.find_all('a', class_='pf')
+    pure_pf_links = [a for a in links if a.get('class') == ['pf']]
 
-base_soup = BeautifulSoup(base_page.text, features='html.parser')
+    url = 'https://www.scalemates.com/colors/?ranges=all'
+    base_url = 'https://www.scalemates.com'
+    url_list = []
 
-links = base_soup.find_all('a', class_='pf')
+    for link in pure_pf_links:
+        href = link.get('href')
+        full_url = base_url + href
+        if full_url not in url_list:
+            url_list.append(full_url)
 
-pure_pf_links = [a for a in links if a.get('class') == ['pf']]
+    brands_to_paints = {}
+    for url in url_list:
+        brand, paint_list = get_page_paints(url)
+        brands_to_paints[brand] = paint_list
 
-url_list = []
+    data_folder = 'scraping_data'
+    output_filename = 'paint_scrape_data.json'
+    output_path = os.path.join(data_folder, output_filename)
 
-for link in pure_pf_links:
-    href = link.get('href')
-    full_url = base_url + href
-    if full_url not in url_list:
-        url_list.append(full_url)
+    # Clearing the output file if it is not empty
+    if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
+        open(output_path, 'w', encoding='utf-8').close()
 
-brands_to_paints = {}
+    with open(output_path, 'w', encoding='utf-8') as output:
+        json.dump(brands_to_paints, output, ensure_ascii=False)
 
-for url in url_list:
+    print(f'Final Output file size: {os.path.getsize(output_path)}\n')
 
-    brand, paint_list = get_page_paints(url)
-
-    brands_to_paints[brand] = paint_list
-
-
-data_folder = 'scraping_data'
-output_filename = 'paint_scrape_data.json'
-
-output_path = os.path.join(data_folder, output_filename)
-
-# Clearing the output file if it is not empty
-if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
-    open(output_path, 'w', encoding='utf-8').close()
-
-with open(output_path, 'w', encoding='utf-8') as output:
-    json.dump(brands_to_paints, output, ensure_ascii=False)
-
-
-print(f'Final Output file size: {os.path.getsize(output_path)}\n')
+if __name__ == "__main__":
+    main()

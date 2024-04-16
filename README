@@ -8,91 +8,84 @@ flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
 <!-- LOGIN FOR TEST USER -->
     username: test_user
     password: Password1!
-<!-- Html Pages -->
-All html pages are extended from base.html
-    - Call {% extends "base.html" %} on EVERY page to ensure all links are imported
-    - If something is present on every page, add it to base.html
 
 
-<!-- Comment Legend -->
-TODO: This means this is a key feature that needs to be implemented
+<!-- PYTHON SCRAPERS EXPLANATION -->
 
-REVIEW: This means we need to decide if this looks good or needs to be changed
+    conversion_scraper.py
+        TO RUN:
+            $ python3 Python_Scrapers/conversion_scraper.py
+
+        - This program scrapes the website: https://www.modelshade.com/paint-conversion-chart/tamiya
+        - Gathers the conversions from Tamiya Paint colors to other brands of paint
+
+    paint_scraper.py
+        TO RUN:
+            $ python3 Python_Scrapers/paint_scraper.py
+
+        - This program scrapes the website: https://www.scalemates.com/colors/?ranges=all
+        - This gathers all available paints a user could possibly have
+            - This is used to autofill suggestions when a user is adding paints to their collection
+            - Also used as a reference when a conversion needs to be made from a Tamiya Paint to a paint of another brand
+        - Scraped data is stored in JSON format
+            - File located at:
+                scraping_data/paint_scrape_data.json
+    
+    pdf_scraper.py
+        TO RUN:
+            $ python3 Python_Scrapers/pdf_scraper.py [mode]
+        
+        - This program scapes the website: https://www.scalemates.com/search.php?q=tamiya&fkSECTION[]=Kits&fkCOMPNAME[]=%22Tamiya%22&fkTYPENAME[]=%22Full%20kits%22&fkGROUPS[]=%22Ships%22&fkGROUPS[]=%22Aircraft%22&fkGROUPS[]=%22Vehicles%22&fkGROUPS[]=%22Space%22&fkGROUPS[]=%22Trains%22
+            - Filters:
+                Brand: Tamiya
+                Product Type: Full kits
+                Groups: Ships, Aircraft, Vehicles, Space, Trains
+        - Available modes to run the program:
+            -u: (run before other modes) Scrapes scalemates page to retrieve links to relevant models
+            -p: Get instruction pdf links, if available, from model pages
+            -s: Get model scale specifications from model pages 
+            -t: Download processed JSON files from Google Cloud Storage
+                - Extracting text from PDFs done with Document AI and the extracted JSONs are stored in Google Cloud Storage
+        - Output Files:
+            -u: model_page_links.output
+            -p: pdf_links.output
+            -s: model_specs.output
+            -t: json_extracted/*
+
+    pdf_analyzer.py
+        TO RUN:
+            $ python3 Python_Scrapers/pdf_analyzer.py
+
+        TODO: EXPLANATION
+
+    transfer_to_database.py
+        TO RUN:
+            $ python3 Python_Scrapers/transfer_to_database.py
+
+        - This program transfers all the scraped information gathered from paint_scraper.py to our sqlite3 database
+        - This allows us to access the data in a quick way using SQL queries instead of parsing a 10,000 line JSON file
+        - ONLY RUN ONCE after paint_scraper.py is run
 
 
+<!-- langtest.py -->
 
-<!-- GENERAL REVIEW -->
-Does font look good like this or should I go back to normal?
-    - Comparison Screenshots in WEBSITE_STYLE_TESTS Folder
+    TODO: DREW
 
+    TO RUN: -----
+        $
 
-<!-- IDEAS -->
-
-    Possibly add section that tells how many:
-        - Paints we cover
-        - Models we have in our index
-        - Models we search for your personal recommendations
-
-    Possibly add "leaderboard" section
-        - How many paints you have in your inventory
-            - How your paint count ranks against other users
-        - How many models you've completed
-            - How this ranks against others
-
-    Add social section where users can post pictures of their models
-        - Allow comments and likes from other users
-        - Users can set their profile public or private
-
-    Add Forum section where modelers can converse about techniques and such
-        - We can do some text processing and retrieval stuff here
-
-    Add tab where you can choose a color on a color wheel, and the program returns colors similar to that from brands you want
-
-
-<!-- TODO: Website HTML/Javascript -->
-    Index.html:
-        - Fix modal pop-up styling for when a user is not signed in
-
-    Create Account Page:
-        - Fix profile pic upload input (DONE)
-        - Fix profile pic upload not showing up in uploads directory
-            - When you create an account an upload a profile pic it should show up in var/uploads folder but it is not for some reason
-        - Add sign in with google
-        - Sliding welcome screen for when a user signs up or logs in
-
-    Sign In page:
-        - Username for login (DONE)
-        - Login logic (DONE)
-        - Forgot username button
-        - Email person password reset stuff
-            -https://medium.com/@stevenrmonaghan/password-reset-with-flask-mail-protocol-ddcdfc190968
-        - Forgot username/password pages
-
-    Toolbox Page:
-        - Paints searchbar
-            - Autofill when users start to type
-            - Have filters for adding lots of paints at once
-                - Filter by brand
-            - Fix null showing up in autofill when paint_type is null
-
-        - Style add paints page
-
-        - Add tracker for paints that are getting low
-            - Have these paints appear in a seperate section on the page
-
-        - Add favorite's selection bar
-            - Displays favorite paint brand
-
-        - Add total paints in collection section
-            - You should be able to see the number of paints in your collection
-            - Should also see
+    - This is used to .......
 
 
 
-<!--  TODO: Scraping -->
+<!-- DATA folder -->
 
-    Paint Scraper (DONE)
-        - Scrape all paint data off scalemates and turn it into a json dump (DONE)
-        - Import json dump into sql database (DONE)
+    This folder holds all of the extraneous data that we need/use in our program
 
-    Model Scraper
+    - golden_standard.txt
+        - This file is our golden_standard for training and testing the accuracy of our instruction classifier algorithm
+
+    - scale_rating.txt
+        - Models come in several scales, and typically the larger the model, the more difficult it is
+        - This file maps common scale sizes to a value between 0-1 based on how much we interpret the scale to impact the difficulty of the model
+        - In the instance where the model we are analyzing doesn't have a corresponding scale value, we will use a default value of 0.5 in our algorithm

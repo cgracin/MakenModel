@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /kits/tamiya-35102-20mm-flak38-mit-sdah51--1112074	German 20mm FlaK38 mit Sd.Ah.51	1:35	0.6
 /kits/tamiya-35091-20mm-flakvierling-38-mit-sdah52--192967	German 20mm Flakvierling 38 mit Sd.Ah.52	1:35	0.6
 /kits/tamiya-35102-20mm-flak-38-mit-sdah-51--1112073	German 20mm FlaK 38 mit Sd.Ah. 51	1:35	0.6
@@ -247,3 +248,64 @@
 /kits/tamiya-12645-yamato-deck-sheet-japanese-battleship--570934	Yamato Deck Sheet - Japanese Battleship	1:350	0.15
 /kits/tamiya-12643-metal-46cm-gun-barrels-and-projectiles--132961	Metal 46cm Gun Barrels & Projectiles	1:350	0.15
 /kits/tamiya-60722-bell-uh-1b-huey--134529	Bell UH-1B Huey	1:72	0.2
+=======
+*** this error is thrown after 48 iterations ***
+Traceback (most recent call last):
+  File "/Users/april/Desktop/docs/Senior Year/EECS 486/MakenModel/Python_Scrapers/pdf_scraper.py", line 133, in <module>
+    main()
+  File "/Users/april/Desktop/docs/Senior Year/EECS 486/MakenModel/Python_Scrapers/pdf_scraper.py", line 127, in main
+    get_specs()
+  File "/Users/april/Desktop/docs/Senior Year/EECS 486/MakenModel/Python_Scrapers/pdf_scraper.py", line 90, in get_specs
+    title = re.search("Title:.*Number", specs).group()[6:-6]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'group'
+
+Infantry Tank Matilda Mk.III/IV "Red Army", 1:35 
+Matilda Mk.III/IV British Infantry Tank Mk.IIA*, 1:35 
+Matilda Mk.III/IV British Infantry Tank Mk.IIA* (Milestone 300th Release + Photographic Reference), 1:35 
+British Infantry Tank Mk.II Matilda Motorized, 1:35 
+British Infantry Tank Mk.II Matilda Remote Control, 1:35 
+British Infantry Tank Mk.II Matilda, 1:35 
+Matilda Mk.III/IV British Infantry Tank Mk.IIA*, 1:48 
+British Cruiser Tank Mk.VI Crusader Mk.III, 1:35 
+Crusader Mk.III British Cruiser Tank Mk.VI, 1:48 
+British Crusader Mk.III Anti-Aircraft Tank Mk.III, 1:48 
+Crusader Mk.I/II British Cruiser Tank Mk.VI, 1:48 
+Great Britain 18ton Light Tank Crusader II, 1:55  1:50 on box
+British Army 18ton Light Tank Crusader II 1 Motor, 1:55 
+British Tank Crusader 1 Motor, 1:55 
+British Army Crusader Remote Control, 1:55 
+British Infantry Tank Mk.IV Churchill Mk.VII, 1:35 
+Churchill Crocodile Build for Churchill Crocodile or Churchill Mk VII, 1:35 
+Churchill Crocodile, 1:35 
+British Tank Churchill Mk. VII Crocodile, 1:48 
+Centaur C.S. Mk.IV British Cruiser Tank Mk.VIII A27L, 1:35 
+Cromwell Mk.IV British Cruiser Tank Mk.VIII, A27M, 1:35 
+British Cruiser Tank Mk.VIII, A27M Cromwell Mk.IV, 1:48 
+A34 Comet British Cruiser Tank , 1:35 
+U.S. Marine AAVP7 A1 w/UGWS with Submarine Motor, 1:35 
+U.S Marine AAVP7A1 w/UGWS, 1:35 
+U.S. Marine LVTP7A1, 1:35 
+AMX-13 French Light Tank, 1:35 
+French Light Tank A.M.X. 105, 1:35 
+French 32ton Medium Tank A.M.X.30 Remote Control, 1:35 
+French 32ton Medium Tank A.M.X.30 Motorized, 1:35 
+French Light Tank A.M.X. D.C.A. 30 défense contre avions, 1:35 
+A-129 Mangusta, 1:72 
+Type 99 Japanese Navy Carrier Dive-bomber, 1:50 
+Type 99 Japanes Navy Carrier Dive Bomber, 1:50 
+Aichi M6A1 Seiran, 1:48 
+Aichi M6A1 Seiran, 1:48 
+Aichi M6A1 Seiran & Aichi M6A1-K Nanzan (Seiran Kai), 1:72 
+Aichi M6A1 Seiran & M6A1-K Nanzan (Seiran Kai), 1:72 
+Aichi M6A1-K Nanzan (Seiran Kai), 1:72 
+Aichi M6A1 Seiran, 1:72 
+U.S. Navy Aircraft Carrier CV-3 Saratoga w/Pontos Model Detail Up Parts, 1:700 
+U.S. Navy Aircraft Carrier CV-3 Saratoga 1944-1945, 1:700 
+Japanese Aircraft Carrier Shinano Water Line Series, 1:700 
+Japanese Aircraft Carrier Shinano Water Line Series, 1:700 
+Japanese Aircraft Carrier Shinano Water Line Series, 1:700 
+Japanese Aircraft Carrier Shinano Water Line Series, 1:700 
+Japanese Aircraft Carrier Shinano, 1:800 
+Japanese Aircraft Carrier SHINANO, 1:800 
+>>>>>>> 83c3c4f268363e1caac8c2ffba449e21024dca3b
