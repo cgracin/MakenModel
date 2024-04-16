@@ -12,8 +12,10 @@ import pytesseract
 from pdf2image import convert_from_path
 import shutil
 
-PAGE_LINK_OUTPUT = 'model_page_links.output'
-MODEL_PDF_LINKS = 'pdf_links.output'
+# PAGE_LINK_OUTPUT = 'model_page_links.output'
+# MODEL_PDF_LINKS = "pdf_links.output"
+PAGE_LINK_OUTPUT = 'vehicle_model_links.output'
+MODEL_PDF_LINKS = 'model_pdfs.output'
 PDF_TEXT_FOLDER = 'pdf_texts'
 
 def get_model_urls(page_url):
@@ -48,7 +50,7 @@ def get_pdfs():
 
     with open(PAGE_LINK_OUTPUT, 'r', encoding='utf-8') as links:
         page_links = [link.strip() for link in links.readlines()]
-
+        
     for link in page_links:
         base_url = "https://www.scalemates.com"
         full_link = urljoin(base_url, link)
@@ -123,7 +125,8 @@ def extract_num_pages_from_pdf_url(pdf_url):
 
 
 def main():
-    url = "https://www.scalemates.com/search.php?q=*&fkSECTION[]=Kits&fkCOMPNAME%5B%5D=%22Tamiya%22"
+    # url = "https://www.scalemates.com/search.php?q=*&fkSECTION[]=Kits&fkCOMPNAME%5B%5D=%22Tamiya%22"
+    url = "https://www.scalemates.com/search.php?q=tamiya&fkSECTION[]=Kits&fkCOMPNAME[]=%22Tamiya%22&fkTYPENAME[]=%22Full%20kits%22&fkGROUPS[]=%22Ships%22&fkGROUPS[]=%22Aircraft%22&fkGROUPS[]=%22Vehicles%22&fkGROUPS[]=%22Space%22&fkGROUPS[]=%22Trains%22"
 
     mode = sys.argv[1]
 
