@@ -55,10 +55,7 @@ def transfer_instruction_data():
 
                 connection.commit()
 
-            break
-
 
 
 if __name__ == "__main__":
     transfer_instruction_data()
-
