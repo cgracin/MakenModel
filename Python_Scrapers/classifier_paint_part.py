@@ -85,7 +85,6 @@ def get_parts_and_paints_from_instructions(pdf_text):
             cleaned_list.append(item)
 
     # print(paint_set, non_unique_paint_counter)
-    print(item_parts)
     # print(cleaned_list)
 
     return paint_set, non_unique_paint_counter, item_parts, cleaned_list
