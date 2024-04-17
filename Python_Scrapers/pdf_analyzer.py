@@ -5,8 +5,6 @@
 
 import os
 import json
-import pathlib
-import sqlite3
 from classifier_paint_part import *
 from text_preprocessor import *
 
