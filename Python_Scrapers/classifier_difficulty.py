@@ -12,14 +12,17 @@ def build_scores(pdfs):
     diff_scores = {}
     scale_scores = get_scale_score_dict()
     max_score = -999
+    min_score = 999
     for pdf in pdfs:
         diff_score = calculate_diff_score(pdf['parts'], pdf['num_paints'], pdf['num_pages'],
                                           scale_scores[pdf['link']], pdf['nb_score'])
         diff_scores[pdf['link']] = diff_score
         if diff_score > max_score:
             max_score = diff_score
+        if diff_score < min_score:
+            min_score = diff_score
     for pdf in diff_scores.keys():
-        diff_scores[pdf] = diff_scores[pdf]/max_score
+        diff_scores[pdf] = (diff_scores[pdf] - min_score) / (max_score - min_score)
 
     # Now transfer dict to database somehow
 
