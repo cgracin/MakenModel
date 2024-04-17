@@ -3,9 +3,6 @@ import os
 import json
 import math
 import re
-import flask
-import pathlib
-import sqlite3
 
 # pseudocode
 # 1. Get user's colors
@@ -90,21 +87,8 @@ def get_parts_and_paints_from_instructions(pdf_text):
     return paint_set, non_unique_paint_counter, item_parts, cleaned_list
 
 
-def dict_factory(cursor, row):
-    """Convert database row objects to a dictionary keyed on column name.
-
-    This is useful for building dictionaries which are then used to render a
-    template.  Note that this would be inefficient for large queries.
-    """
-    return {col[0]: row[idx] for idx, col in enumerate(cursor.description)}
 
 
-def get_db():
-    """Open a new database connection."""
-    root_folder = pathlib.Path(__file__).resolve().parent.parent
-    DATABASE_FILENAME = root_folder / "var" / "makenmodel.sqlite3"
-    connection = sqlite3.connect(str(DATABASE_FILENAME))
-    connection.row_factory = dict_factory
-    connection.execute("PRAGMA foreign_keys = ON")
-    return connection
+
+
 

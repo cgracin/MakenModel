@@ -50,3 +50,11 @@ CREATE TABLE user_fav_brands(
     unique_brand_identifier INTEGER,
     PRIMARY KEY (username, unique_brand_identifier)
 );
+
+-- Instructions table
+
+CREATE TABLE instructions(
+    unique_instruction_identifier PRIMARY KEY AUTOINCREMENT,
+    model_name VARCHAR(256),
+    
+);
