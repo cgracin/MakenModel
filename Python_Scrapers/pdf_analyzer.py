@@ -1,7 +1,7 @@
 # pylint: disable=C0114
 # pylint: disable=C0103
 # pylint: disable=W0401
-#pylint: disable=W0614
+# pylint: disable=W0614
 
 import os
 import json
@@ -9,8 +9,6 @@ import pathlib
 import sqlite3
 from classifier_paint_part import *
 from text_preprocessor import *
-
-
 
 EXTRACTED_JSON_FOLDER = "json_extracted"
 
