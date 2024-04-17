@@ -255,12 +255,17 @@ def preprocess(text):
         "should",
         "now",
     ]
+    # print(text)
     text_cleaned = [token for token in text if token not in stopwords]
+    # print(text_cleaned)
     tokens_stemmed = [porter.stem(token, 0, len(token) - 1) for token in text_cleaned]
     return tokens_stemmed
 
 def tokenize_text(token_in):
-    input_string = token_in.lower()
+    # print(token_in)
+    input_string = ""
+    for word in token_in:
+        input_string += word.lower() + " "
     output_text = re.sub("(?<!\d)\.(?!\d)|\.(?!\d)", "", input_string)  # remove periods
     output_text = re.sub(
         "[!?;:&-]", "", output_text
@@ -274,6 +279,7 @@ def tokenize_text(token_in):
     output_text = re.sub(
         "(?<=[\D]),\s", " ", output_text
     )  # remove comma after a character
+    output_text = re.sub(r"\s+", " ", output_text)
     output_text = re.sub(
         ",[\s.]", " ", output_text
     )  # remove comma followed by space or period
@@ -284,7 +290,7 @@ def tokenize_text(token_in):
         lambda match: cList[match.group(0)],
         output_text,
     )  # expand contractions
-
+    output_text = output_text.split()
     return output_text
 
 
@@ -293,14 +299,18 @@ def get_en_text(text_tokens, langs):
     if len(langs) == 0:
         langs = ["ja", "de", "zh"]
         
-    print(text_tokens)
     en_words = []
+    # print(text_tokens)
     for word in text_tokens:
-        if detect(text=word, low_memory=False)['lang'] not in langs or word.isdigit():
-            en_words.append(word)
+        # print(word)
+        word = word.replace("\n", " ")
+        if word != "/n":
+            if detect(text=word, low_memory=False)['lang'] not in langs or word.isdigit():
+                en_words.append(word)
 
     tokens = tokenize_text(en_words)
     processed_tokens = preprocess(tokens)
+    print(processed_tokens)
     return processed_tokens
     # return ' '.join([line.strip() for line in en_lines if line != ''])
 
