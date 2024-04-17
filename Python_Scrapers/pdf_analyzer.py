@@ -41,7 +41,13 @@ def main():
             json_text = json_data["text"]
             text_langs, num_pages = get_info_from_json(json_data["pages"])
 
-            json_text = get_parts_and_paints_from_instructions(json_text)
+            paint_set, non_unique_paint_counter, item_parts, cleaned_list = get_parts_and_paints_from_instructions(json_text)
+
+            # NOTE: paint_set = set of paints used in model
+            # NOTE: non_unique_paint_counter = number of paints NOT UNIQUE
+            # NOTE: item_parts = [set of all parts in instructions ] UNDERESTIMATE
+            # NOTE: cleaned_list = [array of tokens of json_text without model_parts and paints ] NOT CLEANED
+                # EXAMPLE: ['this', 'is', 'an', 'example']
             # processed_text = get_en_text(json_text, text_langs)
 
 

@@ -45,8 +45,6 @@ def get_parts_and_paints_from_instructions(pdf_text):
 
     paint_codes_no_hyphen = [code.replace('-', '') for code in color_codes]
 
-    print(paint_codes_no_hyphen)
-
     non_unique_paint_counter = 0
     paint_set = set()
     without_codes = []
@@ -55,19 +53,40 @@ def get_parts_and_paints_from_instructions(pdf_text):
         copy_item = item.replace('-', '')
         copy_item = copy_item.replace('(', '')
         copy_item = copy_item.replace(')', '')
-        
+
 
         if copy_item in paint_codes_no_hyphen:
             non_unique_paint_counter += 1
+            item = item.replace('(', '')
+            item = item.replace(')', '')
             paint_set.add(item)
         else:
             without_codes.append(item)
 
+    pattern = re.compile(r'\b[A-Z]\d+\b')
 
+    item_parts = []
 
-    print(paint_set, non_unique_paint_counter)
+    cleaned_list = []
+    # Find all matches of the pattern in the list of strings.
+    for item in without_codes:
+    # Find all matches of the pattern in the current item.
+        matches = pattern.findall(item)
+        if matches:
+            item_parts.extend(matches)  # Add the found item parts to the item_parts list.
+            # Replace the found item parts with an empty string in the current item.
+            cleaned_item = pattern.sub("", item).strip()
+            if cleaned_item:  # If there is any non-matching text left, add it to the cleaned list.
+                cleaned_list.append(cleaned_item)
+        else:
+            # If no item parts are found, add the item as it is to the cleaned list.
+            cleaned_list.append(item)
 
-    return False
+    # print(paint_set, non_unique_paint_counter)
+    # print(item_parts)
+    # print(cleaned_list)
+
+    return paint_set, non_unique_paint_counter, item_parts, cleaned_list
 
 
 def dict_factory(cursor, row):
@@ -87,19 +106,4 @@ def get_db():
     connection.row_factory = dict_factory
     connection.execute("PRAGMA foreign_keys = ON")
     return connection
-
-
-def get_user_paints():
-    logname = "test_user"
-    connection = get_db()
-    cur = connection.execute(
-        "SELECT p.paint_code "
-        "FROM user_paints up "
-        "JOIN paints p ON up.unique_paint_identifier = p.unique_paint_identifier "
-        "WHERE up.username = ?",
-        (logname,),
-    )
-    results = cur.fetchall()
-    codes = [result["paint_code"] for result in results]
-    return codes
 
