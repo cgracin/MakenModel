@@ -7,6 +7,9 @@ import os
 import json
 from classifier_paint_part import *
 from text_preprocessor import *
+from database_transfer import *
+
+
 
 EXTRACTED_JSON_FOLDER = "json_extracted"
 
@@ -54,6 +57,10 @@ def main():
             # NOTE: cleaned_list = [array of tokens of json_text without model_parts and paints ] NOT CLEANED
                 # EXAMPLE: ['this', 'is', 'an', 'example']
             # processed_text = get_en_text(json_text, text_langs)
+
+
+            # NOTE: This maps a unique_instruction_identifier to a unique_paint_identifer for all paints a model requires
+            transfer_instruction_to_paint_database(path, paint_set)
 
 
 if __name__ == "__main__":

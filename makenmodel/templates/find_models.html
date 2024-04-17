@@ -1,0 +1,100 @@
+<!-- Models.html -->
+
+{% extends 'base.html' %}
+
+{% set full_nav = True %}
+
+{% block body_class %}single-dark-background{% endblock %}
+
+{% block content %}
+<div class="container px-4 text-center bg-white rounded">
+
+    <!-- Start of Accordion Component -->
+    <div class="accordion py-5" id="modelsAccordion">
+
+        <!-- Exact Matches Accordion Item -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingExactMatches">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExactMatches" aria-expanded="false" aria-controls="collapseExactMatches">
+                    You can build these right now!
+                </button>
+            </h2>
+            <div id="collapseExactMatches" class="accordion-collapse collapse" aria-labelledby="headingExactMatches" data-bs-parent="#modelsAccordion">
+                <div class="accordion-body">
+                    {% for identifier in exact_match %}
+                        <p>Model Identifier: {{ identifier }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Missing One Paint Accordion Item -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingMissingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMissingOne" aria-expanded="false" aria-controls="collapseMissingOne">
+                    Missing 1 paint
+                </button>
+            </h2>
+            <div id="collapseMissingOne" class="accordion-collapse collapse" aria-labelledby="headingMissingOne" data-bs-parent="#modelsAccordion">
+                <div class="accordion-body">
+                    {% for identifier in missing_one %}
+                        <p>Model Identifier: {{ identifier }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Missing Two Paints Accordion Item -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingMissingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMissingTwo" aria-expanded="false" aria-controls="collapseMissingTwo">
+                    Missing 2 paints
+                </button>
+            </h2>
+            <div id="collapseMissingTwo" class="accordion-collapse collapse" aria-labelledby="headingMissingTwo" data-bs-parent="#modelsAccordion">
+                <div class="accordion-body">
+                    {% for identifier in missing_two %}
+                        <p>Model Identifier: {{ identifier }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Missing Three Paints Accordion Item -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingMissingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMissingThree" aria-expanded="false" aria-controls="collapseMissingThree">
+                    Missing 3 paints
+                </button>
+            </h2>
+            <div id="collapseMissingThree" class="accordion-collapse collapse" aria-labelledby="headingMissingThree" data-bs-parent="#modelsAccordion">
+                <div class="accordion-body">
+                    {% for identifier in missing_three %}
+                        <p>Model Identifier: {{ identifier }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Missing More accordian item -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingMissingMore">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMissingMore" aria-expanded="false" aria-controls="collapseMissingMore">
+                    You are missing more than 3 paints
+                </button>
+            </h2>
+            <div id="collapseMissingMore" class="accordion-collapse collapse" aria-labelledby="headingMissingMore" data-bs-parent="#modelsAccordion">
+                <div class="accordion-body">
+                    {% for identifier in missing_more %}
+                        <p>Model Identifier: {{ identifier }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- End of Accordion Component -->
+
+</div>
+
+{% endblock %}

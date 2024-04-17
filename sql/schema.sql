@@ -57,19 +57,14 @@ CREATE TABLE instructions(
     model_name VARCHAR(256),
     scale VARCHAR(10),
     model_pdf_link VARCHAR(256),
-    model_page_link VARCHAR(256)
+    model_page_link VARCHAR(256),
+    pdf_name VARCHAR(256),
+    difficult_score FLOAT
 );
 
 -- Maps an instruction to a paint it uses
-CREATE TABLE instruction_to_paint(
+CREATE TABLE instructions_to_paints(
     unique_instruction_identifier INTEGER,
     unique_paint_identifier INTEGER,
     PRIMARY KEY (unique_instruction_identifier, unique_paint_identifier)
-);
-
--- Maps paints to instructions that use them
-CREATE TABLE paint_to_instruction(
-    unique_paint_identifier INTEGER,
-    unique_instruction_identifier INTEGER,
-    PRIMARY KEY (unique_paint_identifier, unique_instruction_identifier)
 );

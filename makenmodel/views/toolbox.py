@@ -148,20 +148,25 @@ def add_paints():
     # print(paint_info)
     paint_info = paint_info.split(' ')
 
+    print('ball', paint_info)
+
     paint_code = paint_info[0]
+
 
     paint_type = paint_info[-1]
 
-    # paint_info.pop(0)
-    # paint_info.pop(-1)
-    paint_info.clear()
+    paint_info.pop(0)
+    paint_info.pop(-1)
+    # paint_info.clear()
 
-    paint_name = (' ').join(paint_info)
+    paint_name = ' '.join(paint_info)
     # slice off the ()
     paint_code = paint_code[1:-1]
 
     # slice off the ()
     paint_type = paint_type[1:-1]
+
+    print('ball', paint_code, paint_name, paint_type, brand)
 
     if paint_type != 'null':
         cur = connection.execute(
