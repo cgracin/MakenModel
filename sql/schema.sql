@@ -50,3 +50,21 @@ CREATE TABLE user_fav_brands(
     unique_brand_identifier INTEGER,
     PRIMARY KEY (username, unique_brand_identifier)
 );
+
+-- Instructions table
+CREATE TABLE instructions(
+    unique_instruction_identifier INTEGER PRIMARY KEY AUTOINCREMENT,
+    model_name VARCHAR(256),
+    scale VARCHAR(10),
+    model_pdf_link VARCHAR(256),
+    model_page_link VARCHAR(256),
+    pdf_name VARCHAR(256),
+    difficult_score FLOAT
+);
+
+-- Maps an instruction to a paint it uses
+CREATE TABLE instructions_to_paints(
+    unique_instruction_identifier INTEGER,
+    unique_paint_identifier INTEGER,
+    PRIMARY KEY (unique_instruction_identifier, unique_paint_identifier)
+);
