@@ -30,11 +30,11 @@ flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
         - Scraped data is stored in JSON format
             - File located at:
                 scraping_data/paint_scrape_data.json
-    
+
     pdf_scraper.py
         TO RUN:
             $ python3 Python_Scrapers/pdf_scraper.py [mode]
-        
+
         - This program scapes the website: https://www.scalemates.com/search.php?q=tamiya&fkSECTION[]=Kits&fkCOMPNAME[]=%22Tamiya%22&fkTYPENAME[]=%22Full%20kits%22&fkGROUPS[]=%22Ships%22&fkGROUPS[]=%22Aircraft%22&fkGROUPS[]=%22Vehicles%22&fkGROUPS[]=%22Space%22&fkGROUPS[]=%22Trains%22
             - Filters:
                 Brand: Tamiya
@@ -43,7 +43,7 @@ flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
         - Available modes to run the program:
             -u: (run before other modes) Scrapes scalemates page to retrieve links to relevant models
             -p: Get instruction pdf links, if available, from model pages
-            -s: Get model scale specifications from model pages 
+            -s: Get model scale specifications from model pages
             -t: Download processed JSON files from Google Cloud Storage
                 - Extracting text from PDFs done with Document AI and the extracted JSONs are stored in Google Cloud Storage
         - Output Files:
@@ -58,13 +58,14 @@ flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
 
         TODO: EXPLANATION
 
-    transfer_to_database.py
+    transfer_paints_to_database.py
         TO RUN:
-            $ python3 Python_Scrapers/transfer_to_database.py
+            $ python3 Python_Scrapers/transfer_paints_to_database.py
 
         - This program transfers all the scraped information gathered from paint_scraper.py to our sqlite3 database
         - This allows us to access the data in a quick way using SQL queries instead of parsing a 10,000 line JSON file
-        - ONLY RUN ONCE after paint_scraper.py is run
+        - AUTOMATICALLY RAN by ./bin/makenmodeldb create and ./bin/makenmodeldb reset
+            - If you don't use this script to create or reset the database, you will need to run this program independently
 
 
 <!-- langtest.py -->
