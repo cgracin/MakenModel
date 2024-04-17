@@ -58,7 +58,8 @@ CREATE TABLE instructions(
     scale VARCHAR(10),
     model_pdf_link VARCHAR(256),
     model_page_link VARCHAR(256),
-    pdf_name VARCHAR(256)
+    pdf_name VARCHAR(256),
+    difficult_score FLOAT
 );
 
 -- Maps an instruction to a paint it uses
