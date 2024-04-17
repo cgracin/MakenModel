@@ -12,3 +12,4 @@ from makenmodel.views.toolbox import show_your_paints
 from makenmodel.views.api import get_brands
 from makenmodel.views.toolbox import mark_getting_low
 from makenmodel.views.toolbox import show_getting_low
+from makenmodel.views.models import show_find_models

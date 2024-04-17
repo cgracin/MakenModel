@@ -28,7 +28,7 @@
                             <a id='tools_nav_button' href="{{ url_for('show_toolbox') }}" data-logged-in="{% if logname %}True{% else %}False{% endif %}" class="nav-link">Toolbox</a>
                         </li>
                         <li class="nav-item">
-                            <a id='models_nav_button' href="#questions" data-logged-in="{% if logname %}True{% else %}False{% endif %}" class="nav-link">Models</a>
+                            <a id='models_nav_button' href="{{ url_for('show_find_models') }}" data-logged-in="{% if logname %}True{% else %}False{% endif %}" class="nav-link">Models</a>
                         </li>
                         {% if logname %}
                         <!-- TODO: change this to show username instead of profile and settings -->
