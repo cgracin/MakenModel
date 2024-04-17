@@ -65,7 +65,7 @@ def get_parts_and_paints_from_instructions(pdf_text):
 
     pattern = re.compile(r'\b[A-Z]\d+\b')
 
-    item_parts = []
+    item_parts = set()
 
     cleaned_list = []
     # Find all matches of the pattern in the list of strings.
@@ -73,7 +73,9 @@ def get_parts_and_paints_from_instructions(pdf_text):
     # Find all matches of the pattern in the current item.
         matches = pattern.findall(item)
         if matches:
-            item_parts.extend(matches)  # Add the found item parts to the item_parts list.
+            for match in matches:
+                item_parts.add(match) # Add the found item parts to the item_parts list.
+
             # Replace the found item parts with an empty string in the current item.
             cleaned_item = pattern.sub("", item).strip()
             if cleaned_item:  # If there is any non-matching text left, add it to the cleaned list.
@@ -83,7 +85,7 @@ def get_parts_and_paints_from_instructions(pdf_text):
             cleaned_list.append(item)
 
     # print(paint_set, non_unique_paint_counter)
-    # print(item_parts)
+    print(item_parts)
     # print(cleaned_list)
 
     return paint_set, non_unique_paint_counter, item_parts, cleaned_list
