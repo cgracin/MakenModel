@@ -62,15 +62,8 @@ CREATE TABLE instructions(
 );
 
 -- Maps an instruction to a paint it uses
-CREATE TABLE instruction_to_paint(
+CREATE TABLE instructions_to_paints(
     unique_instruction_identifier INTEGER,
     unique_paint_identifier INTEGER,
     PRIMARY KEY (unique_instruction_identifier, unique_paint_identifier)
-);
-
--- Maps paints to instructions that use them
-CREATE TABLE paint_to_instruction(
-    unique_paint_identifier INTEGER,
-    unique_instruction_identifier INTEGER,
-    PRIMARY KEY (unique_paint_identifier, unique_instruction_identifier)
 );

@@ -69,7 +69,8 @@ def transfer_instruction_data():
 
                 connection.commit()
 
-
+    if connection is not None:
+        connection.close()
 
 if __name__ == "__main__":
     transfer_instruction_data()
