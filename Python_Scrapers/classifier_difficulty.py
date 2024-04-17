@@ -4,12 +4,15 @@
 
 # HAVE:
 # scale score
-def calculate_diff_score(parts, paints, num_pages, keywords, scale_score):
-    params = [0.25, 0.25, 0.25, 0.25]
-    unique_parts = set(parts)
-    part_score = len(unique_parts) / num_pages
-    paint_score = len(paints) / len(unique_parts)
-    diff_score = params[0] * part_score + params[1] * paint_score + params[2] * scale_score + params[3] * len(keywords)
+def calculate_diff_score(parts, num_paints, num_pages, scale, naive_bayes_score):
+    params = [0.25, 0.25, 0.25]
+    num_parts = len(parts)
+    parts_per_page = len(parts) / num_pages
+    paints_per_part = num_paints / num_parts
+    num_parts = num_parts
+    scale_score = get_scale_score(scale)
+    diff_score = params[0] * paints_per_part + params[1] * (paints_per_part * naive_bayes_score) + params[2] * scale_score
+
     return diff_score
 
 def get_scale_score(scale):
