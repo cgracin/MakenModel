@@ -24,6 +24,18 @@ def dict_factory(cursor, row):
     """
     return {col[0]: row[idx] for idx, col in enumerate(cursor.description)}
 
+def get_pdf_name(path):
+
+    split_path = path.split('/')
+
+    part = split_path[-1]
+
+    split_part = part.split('.')
+
+    name = split_part[0]
+
+    return name
+
 def transfer_instruction_data():
 
     instruction_path = "data/model_specs.output"
@@ -46,11 +58,13 @@ def transfer_instruction_data():
                 model_name = parts[2]
                 model_scale = parts[3]
 
+                pdf_name = get_pdf_name(parts[1])
+
 
                 connection.execute(
-                    "INSERT INTO instructions (model_name, scale, model_page_link, model_pdf_link) "
-                    "VALUES (?, ?, ?, ?)",
-                    (model_name, model_scale, model_page_link, model_pdf_link)
+                    "INSERT INTO instructions (model_name, scale, model_page_link, model_pdf_link, pdf_name) "
+                    "VALUES (?, ?, ?, ?, ?)",
+                    (model_name, model_scale, model_page_link, model_pdf_link, pdf_name)
                 )
 
                 connection.commit()

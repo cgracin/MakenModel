@@ -57,7 +57,8 @@ CREATE TABLE instructions(
     model_name VARCHAR(256),
     scale VARCHAR(10),
     model_pdf_link VARCHAR(256),
-    model_page_link VARCHAR(256)
+    model_page_link VARCHAR(256),
+    pdf_name VARCHAR(256)
 );
 
 -- Maps an instruction to a paint it uses

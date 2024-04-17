@@ -46,6 +46,7 @@ def main():
     for file in json_directory:
         path = os.path.join(EXTRACTED_JSON_FOLDER, file)
         json_data = retrieve_json(path)
+        print(path)
         if json_data:
             json_text = json_data["text"]
             text_langs, num_pages = get_info_from_json(json_data["pages"])
