@@ -78,14 +78,15 @@ def get_page_paints(page_url):
     return brand, paint_list
 
 def main():
+    url = 'https://www.scalemates.com/colors/?ranges=all'
+    base_url = 'https://www.scalemates.com'
+
     base_page = requests.get(url)
     base_soup = BeautifulSoup(base_page.text, features='html.parser')
 
     links = base_soup.find_all('a', class_='pf')
     pure_pf_links = [a for a in links if a.get('class') == ['pf']]
 
-    url = 'https://www.scalemates.com/colors/?ranges=all'
-    base_url = 'https://www.scalemates.com'
     url_list = []
 
     for link in pure_pf_links:

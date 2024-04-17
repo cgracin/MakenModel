@@ -35,6 +35,9 @@ case $1 in
 
     cp sql/uploads/* var/uploads/
     echo "+ cp sql/uploads/* var/uploads/"
+
+    python3 Python_Scrapers/transfer_paints_to_database.py
+    echo "Populating database with paint information"
     ;;
 
   "destroy")
@@ -57,6 +60,9 @@ case $1 in
 
     cp sql/uploads/* var/uploads/
     echo "+ cp sql/uploads/* var/uploads/"
+
+    python3 Python_Scrapers/transfer_paints_to_database.py
+    echo "Populating database with paint information"
     ;;
 
   "dump")
