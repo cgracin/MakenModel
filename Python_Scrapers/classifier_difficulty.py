@@ -27,9 +27,8 @@ def build_scores(pdfs):
     # Now transfer dict to database somehow
 
 
-
 def calculate_diff_score(parts, num_paints, num_pages, scale_score, naive_bayes_score):
-    params = [0.25, 0.25, 0.25]
+    params = [0.25, 0.25, 0.25]  # NEED TO ADJUST
     num_parts = len(parts)
     parts_per_page = len(parts) / num_pages
     paints_per_part = num_paints / num_parts
@@ -38,6 +37,7 @@ def calculate_diff_score(parts, num_paints, num_pages, scale_score, naive_bayes_
 
     return diff_score
 
+
 def get_scale_score(scale):
     ratings = {}
     with open('../data/scale_ratings.txt', 'r', encoding='utf-8') as fin:
@@ -45,6 +45,7 @@ def get_scale_score(scale):
             line = line.split()
             ratings[line[0]] = float(line[1])
     known_scales = ratings.keys()
+
     # If model scale is not in our list, find the closest existing scale
     if ':' in scale:
         if scale not in ratings.keys() and scale.split(':')[1].isdigit():
@@ -52,6 +53,7 @@ def get_scale_score(scale):
             closest_scale_key = ''
             closest_scale_val = 999
 
+            # Iterate through known scale-rating pairs, comparing to scraped scales
             for key in known_scales:
                 curr_diff = abs(scale_denom - int(key.split(':')[1]))
                 if curr_diff < closest_scale_val:
@@ -59,6 +61,7 @@ def get_scale_score(scale):
                     closest_scale_val = curr_diff
             scale = closest_scale_key
 
+    # If a rating was not added, return a default value of 0.5
     return ratings.get(scale, 0.5)
 
 def get_scale_score_dict():
