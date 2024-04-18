@@ -4,10 +4,9 @@
 
 # HAVE:
 # scale score
-import sqlite3
-import pathlib
+from database_transfer import *
 
-def build_scores(pdfs):
+def build_scores(id, parts, num_paints, num_pages, nb_score):
     """Iterate through all pdfs in this function?"""
     diff_scores = {}
     scale_scores = get_scale_score_dict()
@@ -28,19 +27,25 @@ def build_scores(pdfs):
 
 
 def calculate_diff_score(parts, num_paints, num_pages, scale_score, naive_bayes_score):
-    params = [0.25, 0.25, 0.25]  # NEED TO ADJUST
+    params = [0.3, 0.3, 0.4]
     num_parts = len(parts)
-    parts_per_page = len(parts) / num_pages
-    paints_per_part = num_paints / num_parts
+    if not num_pages > 0:
+        parts_per_page = 0
+    else:
+        parts_per_page = len(parts) / num_pages
+    if not num_parts > 0:
+        paints_per_part = 0
+    else:
+        paints_per_part = num_paints / num_parts
     num_parts = num_parts
-    diff_score = params[0] * paints_per_part + params[1] * (paints_per_part * naive_bayes_score) + params[2] * scale_score
+    diff_score = params[0] * paints_per_part + params[1] * (parts_per_page * scale_score) + params[2] * naive_bayes_score
 
     return diff_score
 
 
 def get_scale_score(scale):
     ratings = {}
-    with open('../data/scale_ratings.txt', 'r', encoding='utf-8') as fin:
+    with open('data/scale_ratings.txt', 'r', encoding='utf-8') as fin:
         for line in fin.readlines():
             line = line.split()
             ratings[line[0]] = float(line[1])
@@ -66,9 +71,11 @@ def get_scale_score(scale):
 
 def get_scale_score_dict():
     model_ratings = {}
-    with open("../model_specs.output", 'r', encoding='utf-8') as specs:
+    with open("data/model_specs.output", 'r', encoding='utf-8') as specs:
         for line in specs.readlines():
             line = line.split('\t')
+            pdf = line[1]
+            pdf = get_pdf_name(pdf)
             curr_score = get_scale_score(line[3].strip())
-            model_ratings[line[1]] = curr_score
+            model_ratings[pdf] = curr_score
     return model_ratings

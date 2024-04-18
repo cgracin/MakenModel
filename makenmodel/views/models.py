@@ -31,9 +31,7 @@ def find_model_identifiers_by_paint_availability():
         "WHERE username = ?",
         (logname,)
     )
-    user_paints = {row[0] for row in cur.fetchall()}
-
-    print(user_paints)
+    user_paints = [item['unique_paint_identifier'] for item in cur.fetchall()]
 
     model_identifiers_by_missing_count = {0: [], 1: [], 2: [], 3: []}
 
@@ -46,36 +44,24 @@ def find_model_identifiers_by_paint_availability():
         model_identifiers_by_missing_count['more'] = cur_more.fetchall()
     else:
         instruction_query = connection.execute("""
-            SELECT instructions.unique_instruction_identifier
+            SELECT unique_instruction_identifier
             FROM instructions
         """)
-        all_instruction_ids = [row[0] for row in instruction_query.fetchall()]
+        all_instruction_ids = [item['unique_instruction_identifier'] for item in instruction_query.fetchall()]
 
-        for instruction_id in all_instruction_ids:
-            paint_count_query = connection.execute("""
-                SELECT COUNT(*) FROM instructions_to_paints
-                WHERE unique_instruction_identifier = ?
-            """, (instruction_id,))
-            needed_paint_count = paint_count_query.fetchone()[0]
+        for identifier in all_instruction_ids:
+            cur = connection.execute(
+                'SELECT unique_paint_identifier '
+                'FROM instructions_to_paints '
+                'WHERE unique_instruction_identifier = ?',
+                (identifier,)
+            )
+            instruction_paints =  cur.fetchall()
 
-            matching_paint_query = connection.execute("""
-                SELECT COUNT(*) FROM instructions_to_paints
-                WHERE
-                    unique_instruction_identifier = ? AND
-                    unique_paint_identifier IN (SELECT unique_paint_identifier FROM user_paints WHERE username = ?)
-            """, (instruction_id, logname))
-            matching_paint_count = matching_paint_query.fetchone()[0]
+            print(instruction_paints)
+            break
 
-            missing_paints = needed_paint_count - matching_paint_count
 
-            if missing_paints > 3:
-                model_identifiers_by_missing_count.setdefault('more', []).append(instruction_id)
-            else:
-                model_identifiers_by_missing_count[missing_paints].append(instruction_id)
-
-        # If there are more than 20 models in the 'more' category, limit to the top 20.
-        if 'more' in model_identifiers_by_missing_count and len(model_identifiers_by_missing_count['more']) > 20:
-            model_identifiers_by_missing_count['more'] = model_identifiers_by_missing_count['more'][:20]
 
     context = {
         'logname': logname,

@@ -81,10 +81,32 @@ def testNaiveBayes(testfile, out1, out2, out3, typewords):
     result =  max(types_prob, key=types_prob.get)
     return result
 
+def testNaiveBayes2(testfile, out1, out2, out3, typewords):
+    '''
+    '''
+    # print(out1, out2, out3, typewords)
+    result = "unknown"
+    # print(type(testfile))
+    text = testfile
+    # text = Counter(text)
+    types_prob = {"easy" : 0.0, "medium" :  0.0, "hard" : 0.0}
+    for types in types_prob:
+        for word in text:
+            value = 0
+            if out2[types][word]:
+                value = out2[types][word]
+            else:
+                value = math.log((0 + 1.0) / (typewords[types] + out3))
+                # value = ((0 + 1.0) / (typewords[types] + out3)) * text[word]
+            types_prob[types] += value
+        types_prob[types] += out1[types]
+    result =  max(types_prob, key=types_prob.get)
+    return result
+
 def get_train_data():
     trainData = {}
     # EASY
-    with open("easy_vocab.csv", 'r') as f:
+    with open("data/easy_vocab.csv", 'r') as f:
         f.readline()
         content = f.readlines()
         for line in content:
@@ -94,7 +116,7 @@ def get_train_data():
             token_list = vals[1]
             trainData[id] = {"original" : "easy", "text" : token_list}
     # MEDIUM
-    with open("medium_vocab.csv", 'r') as f:
+    with open("data/medium_vocab.csv", 'r') as f:
         f.readline()
         content = f.readlines()
         for line in content:
@@ -104,7 +126,7 @@ def get_train_data():
             token_list = vals[1]
             trainData[id] = {"original" : "medium", "text" : token_list}
     # HARD
-    with open("hard_vocab.csv", 'r') as f:
+    with open("data/hard_vocab.csv", 'r') as f:
         f.readline()
         content = f.readlines()
         for line in content:
@@ -118,7 +140,7 @@ def get_train_data():
 def get_label_data():
     labelData = {}
     # dicti = {}
-    with open("unlabeled_vocab.csv", 'r') as f:
+    with open("data/unlabeled_vocab.csv", 'r') as f:
         f.readline()
         content = f.readlines()
         for line in content:
@@ -153,6 +175,7 @@ def main():
 
     
     # out1, out2, out3, totalwords = trainNaiveBayes(trainData)
+    # print(out1,out2,out3,totalwords)
     # labellingData = get_label_data()
     # # #--------------------------------------------------LABELLING FILE END----------------------------------------------------
     # for labelId in labellingData:
@@ -162,14 +185,13 @@ def main():
     # for labelId in labellingData:
     #     labelResult.append({"ID" : labelId, "LABEL" : labellingData[labelId]["result"]})
     # # #--------------------------------------------------LABELLING FILE END----------------------------------------------------
-
     
     # field names
     fields = ['ID', 'LABEL']
     
     # name of csv file
-    filename = "result2.csv"
-    
+    filename = "result3.csv"
+    # print(labelResult)
     # writing to csv file
     with open(filename, 'w') as csvfile:
         # creating a csv dict writer object
