@@ -82,9 +82,6 @@ def main():
             #     # writing data rows
             #     writer.writerows(id_text)
 
-            # NOTE: This maps a unique_instruction_identifier to a unique_paint_identifer for all paints a model requires
-            transfer_instruction_to_paint_database(path, paint_set)
-
 
 if __name__ == "__main__":
     main()
