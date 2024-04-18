@@ -5,11 +5,13 @@
 
 import os
 import json
+import pathlib
+import sqlite3
 from classifier_paint_part import *
 from text_preprocessor import *
 from database_transfer import *
-import pathlib
-import csv
+from classifier_difficulty import *
+
 
 
 EXTRACTED_JSON_FOLDER = "json_extracted/"
@@ -38,50 +40,101 @@ def get_info_from_json(json_pages):
                     languages.add(lang_code)
     return languages, num_pages
 
+def unlabeled_csv_to_score():
+    label_data = {}
+    with open("data/result.csv", 'r') as f:
+        f.readline()
+        content = f.readlines()
+        for line in content:
+            vals = line.strip().split(",")
+            # print(vals)
+            id = vals[0][:-2]
+            label = vals[1]
+            threshold_score = 0
+            if label == 'easy':
+                threshold_score = 0.3
+            elif label == 'medium':
+                threshold_score = 0.6
+            else:
+                threshold_score = 0.9
+            label_data[id] = threshold_score
+    return label_data
+
 def main():
     """Analyze extracted PDF text"""
+    instruction_texts = {}
+
+    # Build scale:score dictionary
+    scale_scores = get_scale_score_dict()
+
+    # Set original max/min difficulty scores
+    max_diff_score = -999
+    min_diff_score = 999
+
+    # Create pdf:difficulty dictionary
+    diff_scores = {}
+
+    id_score = unlabeled_csv_to_score()
+    # print(id_score)
+
+    folder_path = os.path.join(EXTRACTED_JSON_FOLDER, "unlabeled")
     json_directory = os.listdir(EXTRACTED_JSON_FOLDER)
-    # folder_path = ["easy", "medium", "hard"]
-    for f_path in json_directory:
-        path = os.path.join(EXTRACTED_JSON_FOLDER, f_path)
-        # json_directory = os.listdir(path)
-        # id_text = []
-        # for json_path in json_directory:
-            # json_path2 = os.path.join(path, json_path)
-        json_data = retrieve_json(path)
+    json_directory = os.listdir(folder_path)
+    score_list = []
+    for path in json_directory:
+        clasy = {}
+        json_path = os.path.join(folder_path, path)
+        json_data = retrieve_json(json_path)
         if json_data:
+            # print(json_path)
+            json_path2 = json_path[:-5]
             json_text = json_data["text"]
             text_langs, num_pages = get_info_from_json(json_data["pages"])
-
             paint_set, non_unique_paint_counter, item_parts, cleaned_list = get_parts_and_paints_from_instructions(json_text)
             # NOTE: paint_set = set of paints used in model
             # NOTE: non_unique_paint_counter = number of paints NOT UNIQUE
             # NOTE: item_parts = [set of all parts in instructions ] UNDERESTIMATE
             # NOTE: cleaned_list = [array of tokens of json_text without model_parts and paints ] NOT CLEANED
-                # EXAMPLE: ['this', 'is', 'an', 'example']
+            # EXAMPLE: ['this', 'is', 'an', 'example']
+
+
+            # TBR
             processed_text = get_en_text(cleaned_list, text_langs)
+            # TBR
 
-            # json_id = json_path[:-5]
-            # id_text.append({"ID" : json_id, "TEXT" : processed_text })
-                # print(id_text)
-            # # print(id_text)
-            # # field names
-            # fields = ['ID', 'TEXT']
 
-            # # name of csv file
-            # filename = f"{f_path}_vocab.csv"
+            path2 = path[:-5]
+            # Get difficulty score
+            curr_scale_score = scale_scores[remove_exact_suffix(path2)]
+            curr_diff_score = calculate_diff_score(item_parts, non_unique_paint_counter,num_pages, curr_scale_score, id_score[remove_exact_suffix(path2)])
+            # print("DEBUG:", curr_diff_score)
+            score_list.append(curr_diff_score)
+            # if curr_diff_score > max_diff_score:
+            #     max_diff_score = curr_diff_score
+            # if curr_diff_score < min_diff_score:
+            #     min_diff_score = curr_diff_score
 
-            # # writing to csv file
-            # with open(filename, 'w') as csvfile:
-            #     # creating a csv dict writer object
-            #     writer = csv.DictWriter(csvfile, fieldnames=fields)
+            # Add raw difficulty score to dictionary
+            diff_scores[remove_exact_suffix(path2)] = curr_diff_score
+            # id_score.append((json_path,threshold_score))
+            # if len(score_list)>2:
+            #     break
+    min_diff_score = min(score_list)
+    # print(score_list)
+    score_list.sort(reverse=True)
+    # print(score_list[1])
+    max_diff_score = score_list[1]
+    for pdf in diff_scores.keys():
+        diff_scores[pdf] = (diff_scores[pdf] - min_diff_score) / (max_diff_score - min_diff_score)
 
-            #     # writing headers (field names)
-            #     writer.writeheader()
+    filename = "id_score.txt"
+    with open(filename, 'w') as f:
+        for id_score in diff_scores:
+            f.write(f"{id_score} {diff_scores[id_score]}\n")
 
-            #     # writing data rows
-            #     writer.writerows(id_text)
-
+    # NOTE: This maps a unique_instruction_identifier to a unique_paint_identifer for all paints a model requires
+    # transfer_instruction_to_paint_database(path, paint_set)
+    return None
 
 if __name__ == "__main__":
     main()
