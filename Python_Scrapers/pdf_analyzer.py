@@ -5,6 +5,7 @@
 
 import os
 import json
+import pathlib
 from classifier_paint_part import *
 from text_preprocessor import *
 from database_transfer import *
@@ -58,11 +59,11 @@ def main():
     """Analyze extracted PDF text"""
     json_directory = os.listdir(EXTRACTED_JSON_FOLDER)
     instruction_texts = {}
+    train_pdfs = []
     folder_path = ["easy", "medium", "hard"]
     for f_path in folder_path:
         path = os.path.join(EXTRACTED_JSON_FOLDER, f_path)
         json_directory = os.listdir(path)
-        id_text = []
         for json_path in json_directory:
             json_path2 = os.path.join(path, json_path)
             json_data = retrieve_json(json_path2)
@@ -70,18 +71,17 @@ def main():
                 json_text = json_data["text"]
                 text_langs, num_pages = get_info_from_json(json_data["pages"])
 
-                paint_set, non_unique_paint_counter, item_parts, cleaned_list = get_parts_and_paints_from_instructions(json_text)
+                paint_set, non_unique_paint_counter, item_parts, token_list = get_parts_and_paints_from_instructions(json_text)
                 # NOTE: paint_set = set of paints used in model
                 # NOTE: non_unique_paint_counter = number of paints NOT UNIQUE
                 # NOTE: item_parts = [set of all parts in instructions ] UNDERESTIMATE
-                # NOTE: cleaned_list = [array of tokens of json_text without model_parts and paints ] NOT CLEANED
+                # NOTE: token_list = [array of tokens of json_text without model_parts and paints ] NOT CLEANED
                     # EXAMPLE: ['this', 'is', 'an', 'example']
-                processed_text = get_en_text(cleaned_list, text_langs)
+                cleaned_list = get_en_text(token_list, text_langs)
+                # class_probs, num_topic_docs, 
                 
                 json_id = json_path[:-5]
-                id_text.append({"ID" : json_id, "TEXT" : processed_text })
-                # print(id_text)
-            # print(id_text)
+                train_pdfs.append({"ID" : json_id, "TEXT" : cleaned_list })
             # field names
             fields = ['ID', 'TEXT']
 
@@ -97,7 +97,7 @@ def main():
                 writer.writeheader()
 
                 # writing data rows
-                writer.writerows(id_text)
+                writer.writerows(train_pdfs)
 
 
             # NOTE: This maps a unique_instruction_identifier to a unique_paint_identifer for all paints a model requires

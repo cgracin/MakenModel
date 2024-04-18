@@ -5,57 +5,61 @@ import csv
 import copy
 
 def trainNaiveBayes(list_filepaths):
-    '''
-    '''
-    out1 = {"easy" : 0.0, "medium" :  0.0, "hard" : 0.0}
-    out2 =  {"easy" : Counter(), "medium" :  Counter(), "hard" : Counter()}
+    """Train naive bayes algorithm"""
+    class_probs = {"easy" : 0.0, "medium" :  0.0, "hard" : 0.0}
+    num_topic_docs =  {"easy" : Counter(), "medium" :  Counter(), "hard" : Counter()}
     out3 = 0
-    sets = set()
+    vocab = set()
+
     for key in list_filepaths.keys():
         types = "unknown"
         if list_filepaths[key]["original"] == "easy":
-            out1["easy"] +=1
+            class_probs["easy"] += 1
             types = "easy"
         elif list_filepaths[key]["original"] == "medium":
-            out1["medium"] +=1
+            class_probs["medium"] += 1
             types = "medium"
         else:
-            out1["hard"] +=1
+            class_probs["hard"] += 1
             types = "hard"
         text = list_filepaths[key]["text"]
-        out2[types] += Counter(text)
-        sets.update(text)
+        num_topic_docs[types] += Counter(text)
+        vocab.update(text)
 
-    total = out1["easy"] + out1["medium"] + out1["hard"]
-    out1["easy"] = math.log(out1["easy"]/total)
-    out1["medium"] = math.log(out1["medium"]/total)
-    out1["hard"] = math.log(out1["hard"]/total)
+    total = class_probs["easy"] + class_probs["medium"] + class_probs["hard"]
+    class_probs["easy"] = math.log(class_probs["easy"] / total)
+    class_probs["medium"] = math.log(class_probs["medium"] / total)
+    class_probs["hard"] = math.log(class_probs["hard"] / total)
 
     # Total Number of words for each types
     typewords = {"easy" : 0.0, "medium" :  0.0, "hard" : 0.0}
-    typewords["easy"] = sum(out2["easy"].values())
-    typewords["medium"] = sum(out2["medium"].values())
-    typewords["hard"] = sum(out2["hard"].values())
+    typewords["easy"] = sum(num_topic_docs["easy"].values())
+    typewords["medium"] = sum(num_topic_docs["medium"].values())
+    typewords["hard"] = sum(num_topic_docs["hard"].values())
 
-    # + operation will combine both Counter from easy, medium and hard, and from there, 
+    # + operation will combine both Counter from easy, medium and hard, and from there,
     # we can get its unique vocabulary words
-    out4 = out2["easy"] + out2["medium"] + out2["hard"]
+    out4 = num_topic_docs["easy"] + num_topic_docs["medium"] + num_topic_docs["hard"]
     # Number of unique vocab
     out3 = len(out4)
-    
-    if out3 != len(sets):
+
+    if out3 != len(vocab):
         print("Wait the total number of unique vocab is different")
 
     for word in out4.keys():
-        for types in out2.keys():
-            if out2[types][word]:
-                out2[types][word] = math.log((out2[types][word] + 1.0) / (typewords[types] + out3))
+        for types in num_topic_docs.keys():
+            if num_topic_docs[types][word]:
+                num_topic_docs[types][word] = math.log(
+                    (num_topic_docs[types][word] + 1.0) / (typewords[types] + out3)
+                )
                 # out2[types][word] = ((out2[types][word] + 1.0) / (typewords[types] + out3))
             else:
-                out2[types][word] = math.log((0 + 1.0) / (typewords[types] + out3))
+                num_topic_docs[types][word] = math.log(
+                    (0 + 1.0) / (typewords[types] + out3)
+                )
                 # out2[types][word] = ((0 + 1.0) / (typewords[types] + out3))
 
-    return out1, out2, out3, typewords
+    return class_probs, num_topic_docs, out3, typewords
 
 def testNaiveBayes(testfile, out1, out2, out3, typewords):
     '''
@@ -218,4 +222,3 @@ if __name__ == "__main__":
     #         count += 1
     # if datafolder[-1] == "/":
     #     datafolder = datafolder[:-1]
-    
