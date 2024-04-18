@@ -22,7 +22,17 @@
             <div id="collapseExactMatches" class="accordion-collapse collapse" aria-labelledby="headingExactMatches" data-bs-parent="#modelsAccordion">
                 <div class="accordion-body">
                     {% for identifier in exact_match %}
-                        <p>Model Identifier: {{ identifier }}</p>
+                        {% if identifier %}
+                            <div class="bg-dark m-2 py-2 text-light rounded d-flex flex-row justify-content-between align-items-center border-end {% if identifier.difficulty_score <= 0.142 %} border-success {% elif identifier.difficulty_score > 0.142 and identifier.difficulty_score <= 0.177 %} border-warning {% elif identifier.difficulty_score > 0.177 %} border-danger {% endif %} border-5">
+                                <div class="px-4">
+                                    <p class="m-2">{{ identifier.model_name }}</p>
+                                    <p class="m-2">Scale: {{ identifier.scale }}</p>
+                                </div>
+                                <div class="px-4">
+                                    <p class="m-2"><a href="{{ identifier.model_page_link }}" class="text-light p-2">Click here to visit the model page</a></p>
+                                </div>
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -38,7 +48,17 @@
             <div id="collapseMissingOne" class="accordion-collapse collapse" aria-labelledby="headingMissingOne" data-bs-parent="#modelsAccordion">
                 <div class="accordion-body">
                     {% for identifier in missing_one %}
-                        <p>Model Identifier: {{ identifier }}</p>
+                        {% if identifier %}
+                                <div class="bg-dark m-2 py-2 text-light rounded d-flex flex-row justify-content-between align-items-center border-end {% if identifier.difficulty_score <= 0.142 %} border-success {% elif identifier.difficulty_score > 0.142 and identifier.difficulty_score <= 0.177 %} border-warning {% elif identifier.difficulty_score > 0.177 %} border-danger {% endif %} border-5">
+                                <div class="px-4">
+                                    <p class="m-2">{{ identifier.model_name }}</p>
+                                    <p class="m-2">Scale: {{ identifier.scale }}</p>
+                                </div>
+                                <div class="px-4">
+                                    <p class="m-2"><a href="{{ identifier.model_page_link }}" class="text-light p-2">Click here to visit the model page</a></p>
+                                </div>
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -54,7 +74,17 @@
             <div id="collapseMissingTwo" class="accordion-collapse collapse" aria-labelledby="headingMissingTwo" data-bs-parent="#modelsAccordion">
                 <div class="accordion-body">
                     {% for identifier in missing_two %}
-                        <p>Model Identifier: {{ identifier }}</p>
+                        {% if identifier %}
+                                <div class="bg-dark m-2 py-2 text-light rounded d-flex flex-row justify-content-between align-items-center border-end {% if identifier.difficulty_score <= 0.142 %} border-success {% elif identifier.difficulty_score > 0.142 and identifier.difficulty_score <= 0.177 %} border-warning {% elif identifier.difficulty_score > 0.177 %} border-danger {% endif %} border-5">
+                                <div class="px-4">
+                                    <p class="m-2">{{ identifier.model_name }}</p>
+                                    <p class="m-2">Scale: {{ identifier.scale }}</p>
+                                </div>
+                                <div class="px-4">
+                                    <p class="m-2"><a href="{{ identifier.model_page_link }}" class="text-light p-2">Click here to visit the model page</a></p>
+                                </div>
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -70,7 +100,17 @@
             <div id="collapseMissingThree" class="accordion-collapse collapse" aria-labelledby="headingMissingThree" data-bs-parent="#modelsAccordion">
                 <div class="accordion-body">
                     {% for identifier in missing_three %}
-                        <p>Model Identifier: {{ identifier }}</p>
+                        {% if identifier %}
+                                <div class="bg-dark m-2 py-2 text-light rounded d-flex flex-row justify-content-between align-items-center border-end {% if identifier.difficulty_score <= 0.142 %} border-success {% elif identifier.difficulty_score > 0.142 and identifier.difficulty_score <= 0.177 %} border-warning {% elif identifier.difficulty_score > 0.177 %} border-danger {% endif %} border-5">
+                                <div class="px-4">
+                                    <p class="m-2">{{ identifier.model_name }}</p>
+                                    <p class="m-2">Scale: {{ identifier.scale }}</p>
+                                </div>
+                                <div class="px-4">
+                                    <p class="m-2"><a href="{{ identifier.model_page_link }}" class="text-light p-2">Click here to visit the model page</a></p>
+                                </div>
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -86,7 +126,17 @@
             <div id="collapseMissingMore" class="accordion-collapse collapse" aria-labelledby="headingMissingMore" data-bs-parent="#modelsAccordion">
                 <div class="accordion-body">
                     {% for identifier in missing_more %}
-                        <p>Model Identifier: {{ identifier }}</p>
+                        {% if identifier %}
+                                <div class="bg-dark m-2 py-2 text-light rounded d-flex flex-row justify-content-between align-items-center border-end {% if identifier.difficulty_score <= 0.142 %} border-success {% elif identifier.difficulty_score > 0.142 and identifier.difficulty_score <= 0.177 %} border-warning {% elif identifier.difficulty_score > 0.177 %} border-danger {% endif %} border-5">
+                                <div class="px-4">
+                                    <p class="m-2">{{ identifier.model_name }}</p>
+                                    <p class="m-2">Scale: {{ identifier.scale }}</p>
+                                </div>
+                                <div class="px-4">
+                                    <p class="m-2"><a href="{{ identifier.model_page_link }}" class="text-light p-2">Click here to visit the model page</a></p>
+                                </div>
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>

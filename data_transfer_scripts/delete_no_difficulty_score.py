@@ -23,37 +23,18 @@ def dict_factory(cursor, row):
     """
     return {col[0]: row[idx] for idx, col in enumerate(cursor.description)}
 
-def transfer_difficulty_scores():
 
-    instruction_path = "data/difficulty_scores.output"
-
+def delete_stuff():
     connection = get_db()
 
-    with open(instruction_path, 'r', encoding='utf-8') as scores:
+    connection.execute(
+        "DELETE FROM instructions WHERE difficulty_score IS NULL"
+    )
 
-        for line in scores:
-            line = line.strip()
-
-            parts = line.split()
-
-            if len(parts) == 2:
-
-                model_difficulty_score = float(parts[1])
-
-
-
-                pdf_name = parts[0]
-
-                connection.execute(
-                    "UPDATE instructions "
-                    "SET difficulty_score = ? WHERE pdf_name = ?",
-                    (model_difficulty_score, pdf_name)
-                )
-
-                connection.commit()
+    connection.commit()
 
     if connection is not None:
         connection.close()
 
 if __name__ == "__main__":
-    transfer_difficulty_scores()
+    delete_stuff()

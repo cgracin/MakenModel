@@ -45,6 +45,12 @@ case $1 in
     python3 data_transfer_scripts/paints_to_instructions_map.py
     echo "Populating instructions with their required paints"
 
+    python3 data_transfer_scripts/difficulty_to_database.py
+    echo "Populating instructions with their difficulty score"
+
+    python3 data_transfer_scripts/delete_no_difficulty_score.py
+    echo "Deleting instructions with no difficulty score"
+
     ;;
 
   "destroy")
@@ -76,6 +82,12 @@ case $1 in
 
     python3 data_transfer_scripts/paints_to_instructions_map.py
     echo "Populating instructions with their required paints"
+
+    python3 data_transfer_scripts/difficulty_to_database.py
+    echo "Populating instructions with their difficulty score"
+
+    python3 data_transfer_scripts/delete_no_difficulty_score.py
+    echo "Deleting instructions with no difficulty score"
     ;;
 
   "dump")
