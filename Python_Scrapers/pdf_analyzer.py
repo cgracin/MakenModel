@@ -12,8 +12,6 @@ from text_preprocessor import *
 from database_transfer import *
 from classifier_difficulty import *
 
-
-
 EXTRACTED_JSON_FOLDER = "json_extracted/"
 
 def retrieve_json(file_path):
@@ -39,26 +37,6 @@ def get_info_from_json(json_pages):
                 if lang_code != "en":
                     languages.add(lang_code)
     return languages, num_pages
-
-def unlabeled_csv_to_score():
-    label_data = {}
-    with open("data/result.csv", 'r') as f:
-        f.readline()
-        content = f.readlines()
-        for line in content:
-            vals = line.strip().split(",")
-            # print(vals)
-            id = vals[0][:-2]
-            label = vals[1]
-            threshold_score = 0
-            if label == 'easy':
-                threshold_score = 0.3
-            elif label == 'medium':
-                threshold_score = 0.6
-            else:
-                threshold_score = 0.9
-            label_data[id] = threshold_score
-    return label_data
 
 def unlabeled_csv_to_score():
     label_data = {}
@@ -122,14 +100,21 @@ def main():
             processed_text = get_en_text(cleaned_list, text_langs)
             # TBR
 
-    filename = "id_score.txt"
-    with open(filename, 'w') as f:
-        for id_score in diff_scores:
-            print(f"{id_score} {diff_scores[id_score]}\n")
-
-    # NOTE: This maps a unique_instruction_identifier to a unique_paint_identifer for all paints a model requires
-    # transfer_instruction_to_paint_database(path, paint_set)
-    return None
+            '''
+            nb_score = ""
+            json_path2 = json_path[:-5]
+            clasy[json_path] = {}
+            clasy[json_path]["text"] = processed_text
+            nb_score = testNaiveBayes2(processed_text, class_prob, tf, vocab_size, totalwords)
+            nb_score = testNaiveBayes(clasy[json_path], out1, out2, out3, totalwords)
+            print(nb_score)
+            if nb_score == 'easy':
+                threshold_score = 0.3
+            elif nb_score == 'medium':
+                threshold_score = 0.6
+            else:
+                threshold_score = 0.9
+            '''
 
             path2 = path[:-5]
             # Get difficulty score
@@ -145,21 +130,16 @@ def main():
             # Add raw difficulty score to dictionary
             diff_scores[remove_exact_suffix(path2)] = curr_diff_score
             # id_score.append((json_path,threshold_score))
-            # if len(score_list)>2:
-            #     break
+            # break
     min_diff_score = min(score_list)
-    # print(score_list)
-    score_list.sort(reverse=True)
-    # print(score_list[1])
-    max_diff_score = score_list[1]
+    max_diff_score = max(score_list)
     for pdf in diff_scores.keys():
         diff_scores[pdf] = (diff_scores[pdf] - min_diff_score) / (max_diff_score - min_diff_score)
 
     filename = "id_score.txt"
     with open(filename, 'w') as f:
         for id_score in diff_scores:
-            f.write(f"{id_score} {diff_scores[id_score]}\n")
-
+            print(f"{id_score} {diff_scores[id_score]}\n")
     # NOTE: This maps a unique_instruction_identifier to a unique_paint_identifer for all paints a model requires
     # transfer_instruction_to_paint_database(path, paint_set)
     return None
