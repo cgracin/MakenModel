@@ -1,4 +1,3 @@
-import json
 from porter_stemmer import *
 import re
 from ftlangdetect import detect
@@ -264,32 +263,40 @@ def preprocess(text):
 def tokenize_text(token_in):
     # print(token_in)
     input_string = ""
+    new_word = ""
     for word in token_in:
+        if not word.isascii():
+            new_word = ""
+            for c in word:
+                if c.isascii():
+                    new_word += c
+            word = new_word
         input_string += word.lower() + " "
     output_text = re.sub("(?<!\d)\.(?!\d)|\.(?!\d)", "", input_string)  # remove periods
+    output_text = re.sub("(-\s)", "", output_text) # remove dashes that separated words between lines
     output_text = re.sub(
-        "[!?;:&-]", "", output_text
+        "[,!?;:&<>*-]", "", output_text
     )  # remove [space] + punctuation & last period in elipses
     output_text = re.sub(
         '["\[\]]', "", output_text
     )  # remove [space] + punctuation & last period in elipses
     output_text = re.sub(r"\\", "", output_text)
-    output_text = re.sub(r"/", " ", output_text)
-    output_text = re.sub("\s-", "", output_text)  # remove dash
-    output_text = re.sub(
-        "(?<=[\D]),\s", " ", output_text
-    )  # remove comma after a character
-    output_text = re.sub(r"\s+", " ", output_text)
-    output_text = re.sub(
-        ",[\s.]", " ", output_text
-    )  # remove comma followed by space or period
-    output_text = re.sub("'\s", " ", output_text)  # remove apostrophe followed by space
+    output_text = re.sub("(?<!\d)\/(?!\d)", " ", output_text)
+    # output_text = re.sub("\s-", "", output_text)  # remove dash
+    # output_text = re.sub(
+    #     "(?<=[\D]),\s", " ", output_text
+    # )  # remove comma after a character
+    # output_text = re.sub(r"\s+", " ", output_text)
+    # output_text = re.sub(
+    #     ",[\s.]", " ", output_text
+    # )  # remove comma followed by space or period
     output_text = re.sub("[\(\)]", "", output_text)  # remove parantheses
     output_text = re.sub(
         "(%s)" % "|".join(cList.keys()),
         lambda match: cList[match.group(0)],
         output_text,
     )  # expand contractions
+    output_text = re.sub("'", "", output_text)  # remove apostrophe followed by space
     output_text = output_text.split()
     return output_text
 
@@ -309,9 +316,9 @@ def get_en_text(text_tokens, langs):
                 en_words.append(word)
 
     tokens = tokenize_text(en_words)
-    processed_tokens = preprocess(tokens)
+    # processed_tokens = preprocess(tokens)
     # print(processed_tokens)
-    return processed_tokens
+    return tokens
     # return ' '.join([line.strip() for line in en_lines if line != ''])
 
 # def preprocess_text(pdf_text):

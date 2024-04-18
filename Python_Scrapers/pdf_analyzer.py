@@ -14,7 +14,6 @@ from classifier_difficulty import *
 from naive_bayes_2222 import *
 
 
-
 EXTRACTED_JSON_FOLDER = "json_extracted/"
 
 def retrieve_json(file_path):
