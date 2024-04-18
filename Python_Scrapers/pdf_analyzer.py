@@ -5,10 +5,14 @@
 
 import os
 import json
+import pathlib
+import sqlite3
 from classifier_paint_part import *
 from text_preprocessor import *
 from database_transfer import *
-import csv
+from classifier_difficulty import *
+from naive_bayes_2222 import *
+
 
 
 EXTRACTED_JSON_FOLDER = "json_extracted/"
@@ -54,55 +58,112 @@ def dict_factory(cursor, row):
     """
     return {col[0]: row[idx] for idx, col in enumerate(cursor.description)}
 
+def unlabeled_csv_to_score():
+    label_data = {}
+    with open("data/result.csv", 'r') as f:
+        f.readline()
+        content = f.readlines()
+        for line in content:
+            vals = line.strip().split(",")
+            # print(vals)
+            id = vals[0][:-2]
+            label = vals[1]
+            threshold_score = 0
+            if label == 'easy':
+                threshold_score = 0.3
+            elif label == 'medium':
+                threshold_score = 0.6
+            else:
+                threshold_score = 0.9
+            label_data[id] = threshold_score
+    return label_data
+
 def main():
     """Analyze extracted PDF text"""
-    json_directory = os.listdir(EXTRACTED_JSON_FOLDER)
     instruction_texts = {}
-    folder_path = ["easy", "medium", "hard"]
-    for f_path in folder_path:
-        path = os.path.join(EXTRACTED_JSON_FOLDER, f_path)
-        json_directory = os.listdir(path)
-        id_text = []
-        for json_path in json_directory:
-            json_path2 = os.path.join(path, json_path)
-            json_data = retrieve_json(json_path2)
-            if json_data:
-                json_text = json_data["text"]
-                text_langs, num_pages = get_info_from_json(json_data["pages"])
+    
+    # Build scale:score dictionary
+    scale_scores = get_scale_score_dict()
+    
+    # Set original max/min difficulty scores
+    max_diff_score = -999
+    min_diff_score = 999
+    
+    # Create pdf:difficulty dictionary
+    diff_scores = {}
+    
+    id_score = unlabeled_csv_to_score()
+    # print(id_score)
+    
+    folder_path = os.path.join(EXTRACTED_JSON_FOLDER, "unlabeled")
+    json_directory = os.listdir(EXTRACTED_JSON_FOLDER)
+    json_directory = os.listdir(folder_path)    
+    score_list = []
+    for path in json_directory:
+        clasy = {}
+        json_path = os.path.join(folder_path, path)
+        json_data = retrieve_json(json_path)
+        if json_data:
+            # print(json_path)
+            json_path2 = json_path[:-5]
+            json_text = json_data["text"]
+            text_langs, num_pages = get_info_from_json(json_data["pages"])
+            paint_set, non_unique_paint_counter, item_parts, cleaned_list = get_parts_and_paints_from_instructions(json_text)
+            # NOTE: paint_set = set of paints used in model
+            # NOTE: non_unique_paint_counter = number of paints NOT UNIQUE
+            # NOTE: item_parts = [set of all parts in instructions ] UNDERESTIMATE
+            # NOTE: cleaned_list = [array of tokens of json_text without model_parts and paints ] NOT CLEANED
+            # EXAMPLE: ['this', 'is', 'an', 'example']
+            
+            
+            # TBR 
+            processed_text = get_en_text(cleaned_list, text_langs)
+            # TBR
 
-                paint_set, non_unique_paint_counter, item_parts, cleaned_list = get_parts_and_paints_from_instructions(json_text)
-                # NOTE: paint_set = set of paints used in model
-                # NOTE: non_unique_paint_counter = number of paints NOT UNIQUE
-                # NOTE: item_parts = [set of all parts in instructions ] UNDERESTIMATE
-                # NOTE: cleaned_list = [array of tokens of json_text without model_parts and paints ] NOT CLEANED
-                    # EXAMPLE: ['this', 'is', 'an', 'example']
-                processed_text = get_en_text(cleaned_list, text_langs)
-                
-                json_id = json_path[:-5]
-                id_text.append({"ID" : json_id, "TEXT" : processed_text })
-                # print(id_text)
-            # print(id_text)
-            # field names
-            fields = ['ID', 'TEXT']
+            '''
+            nb_score = ""
+            json_path2 = json_path[:-5]
+            clasy[json_path] = {}
+            clasy[json_path]["text"] = processed_text            
+            nb_score = testNaiveBayes2(processed_text, class_prob, tf, vocab_size, totalwords)
+            nb_score = testNaiveBayes(clasy[json_path], out1, out2, out3, totalwords)
+            print(nb_score)
+            if nb_score == 'easy':
+                threshold_score = 0.3
+            elif nb_score == 'medium':
+                threshold_score = 0.6
+            else:
+                threshold_score = 0.9
+            '''
+            
+            path2 = path[:-5]
+            # Get difficulty score
+            curr_scale_score = scale_scores[remove_exact_suffix(path2)]
+            curr_diff_score = calculate_diff_score(item_parts, non_unique_paint_counter,num_pages, curr_scale_score, id_score[remove_exact_suffix(path2)])
+            # print("DEBUG:", curr_diff_score)
+            score_list.append(curr_diff_score)
+            # if curr_diff_score > max_diff_score:
+            #     max_diff_score = curr_diff_score
+            # if curr_diff_score < min_diff_score:
+            #     min_diff_score = curr_diff_score
+            
+            # Add raw difficulty score to dictionary
+            diff_scores[remove_exact_suffix(path2)] = curr_diff_score
+            # id_score.append((json_path,threshold_score))
+            # break
+    min_diff_score = min(score_list)
+    max_diff_score = max(score_list)
+    for pdf in diff_scores.keys():
+        diff_scores[pdf] = (diff_scores[pdf] - min_diff_score) / (max_diff_score - min_diff_score)
 
-            # name of csv file
-            filename = f"{f_path}_vocab.csv"
-
-            # writing to csv file
-            with open(filename, 'w') as csvfile:
-                # creating a csv dict writer object
-                writer = csv.DictWriter(csvfile, fieldnames=fields)
-
-                # writing headers (field names)
-                writer.writeheader()
-
-                # writing data rows
-                writer.writerows(id_text)
-
-
-            # NOTE: This maps a unique_instruction_identifier to a unique_paint_identifer for all paints a model requires
-            transfer_instruction_to_paint_database(path, paint_set)
-
+    filename = "id_score.txt"
+    with open(filename, 'w') as f:
+        for id_score in diff_scores:
+            print(f"{id_score} {diff_scores[id_score]}\n")
+    
+    # NOTE: This maps a unique_instruction_identifier to a unique_paint_identifer for all paints a model requires
+    # transfer_instruction_to_paint_database(path, paint_set)
+    return None
 
 if __name__ == "__main__":
     main()

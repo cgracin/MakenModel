@@ -310,7 +310,7 @@ def get_en_text(text_tokens, langs):
 
     tokens = tokenize_text(en_words)
     processed_tokens = preprocess(tokens)
-    print(processed_tokens)
+    # print(processed_tokens)
     return processed_tokens
     # return ' '.join([line.strip() for line in en_lines if line != ''])
 
