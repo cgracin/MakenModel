@@ -24,7 +24,6 @@ def build_scores(pdfs):
     # Now transfer dict to database somehow
 
 
-
 def calculate_diff_score(parts, num_paints, num_pages, scale_score, naive_bayes_score):
     params = [0.25, 0.25, 0.25]
     num_parts = len(parts)
