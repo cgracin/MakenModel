@@ -2,3 +2,5 @@ env/
 json_extracted/
 .DS_Store
 json_extracted/
+.pyc
+.cpython
