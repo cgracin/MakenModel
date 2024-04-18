@@ -60,6 +60,26 @@ def unlabeled_csv_to_score():
             label_data[id] = threshold_score
     return label_data
 
+def unlabeled_csv_to_score():
+    label_data = {}
+    with open("data/result.csv", 'r') as f:
+        f.readline()
+        content = f.readlines()
+        for line in content:
+            vals = line.strip().split(",")
+            # print(vals)
+            id = vals[0][:-2]
+            label = vals[1]
+            threshold_score = 0
+            if label == 'easy':
+                threshold_score = 0.3
+            elif label == 'medium':
+                threshold_score = 0.6
+            else:
+                threshold_score = 0.9
+            label_data[id] = threshold_score
+    return label_data
+
 def main():
     """Analyze extracted PDF text"""
     instruction_texts = {}
@@ -102,6 +122,14 @@ def main():
             processed_text = get_en_text(cleaned_list, text_langs)
             # TBR
 
+    filename = "id_score.txt"
+    with open(filename, 'w') as f:
+        for id_score in diff_scores:
+            print(f"{id_score} {diff_scores[id_score]}\n")
+
+    # NOTE: This maps a unique_instruction_identifier to a unique_paint_identifer for all paints a model requires
+    # transfer_instruction_to_paint_database(path, paint_set)
+    return None
 
             path2 = path[:-5]
             # Get difficulty score
