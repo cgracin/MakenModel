@@ -1,7 +1,5 @@
-import sys
 import os
 import json
-import math
 import re
 
 # pseudocode
@@ -16,16 +14,16 @@ def get_color_codes_json():
     """Getting color codes from JSON."""
     # Paints to grab: Tamiya, Tamiya Color Laqcuer Paint, Tamiya Paint Markers, Tamiya Polycarb Marker
     paints_grab_list = ["Tamiya", "Tamiya Color Lacquer Paint", "Tamiya Paint Markers", "Tamiya Polycarb Marker"]
+    do_not_add = ["Light Earth", "Mud", "Sand"]
+    color_codes = []
 
     # Opening JSON file
     with open(os.path.join(SCRAPED_PAINT), "r", encoding="utf-8") as paint_data:
         data = json.load(paint_data)
-    do_not_add = ["Light Earth", "Mud", "Sand"]
-    color_codes = []
-    for paint_type in paints_grab_list:
-        for i in data[paint_type]:
-            if i[0] not in do_not_add and not i[0].isdigit():
-                color_codes.append(i[0])
+        for paint_type in paints_grab_list:
+            for i in data[paint_type]:
+                if i[0] not in do_not_add and not i[0].isdigit():
+                    color_codes.append(i[0])
     return color_codes
 
 
