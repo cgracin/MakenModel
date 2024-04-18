@@ -150,16 +150,20 @@ def main():
             # Add raw difficulty score to dictionary
             diff_scores[remove_exact_suffix(path2)] = curr_diff_score
             # id_score.append((json_path,threshold_score))
-            # break
+            # if len(score_list)>2:
+            #     break
     min_diff_score = min(score_list)
-    max_diff_score = max(score_list)
+    # print(score_list)
+    score_list.sort(reverse=True)
+    # print(score_list[1])
+    max_diff_score = score_list[1]
     for pdf in diff_scores.keys():
         diff_scores[pdf] = (diff_scores[pdf] - min_diff_score) / (max_diff_score - min_diff_score)
 
     filename = "id_score.txt"
     with open(filename, 'w') as f:
         for id_score in diff_scores:
-            print(f"{id_score} {diff_scores[id_score]}\n")
+            f.write(f"{id_score} {diff_scores[id_score]}\n")
     
     # NOTE: This maps a unique_instruction_identifier to a unique_paint_identifer for all paints a model requires
     # transfer_instruction_to_paint_database(path, paint_set)

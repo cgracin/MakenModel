@@ -46,11 +46,10 @@ def transfer_difficulty_scores():
 
 
                 connection.execute(
-                    "INSERT INTO instructions (model_name, scale, model_page_link, model_pdf_link, pdf_name) "
-                    "VALUES (?, ?, ?, ?, ?)",
-                    (model_name, model_scale, model_page_link, model_pdf_link, pdf_name)
-                )
                     "UPDATE instructions "
+                    "SET difficult_score = ? WHERE pdf_name = ?",
+                    (model_difficulty_score, pdf_name)
+                )
 
                 connection.commit()
 
@@ -58,4 +57,4 @@ def transfer_difficulty_scores():
         connection.close()
 
 if __name__ == "__main__":
-    transfer_instruction_data()
+    transfer_difficulty_scores()
