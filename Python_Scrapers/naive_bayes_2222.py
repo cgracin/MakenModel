@@ -148,16 +148,28 @@ def main():
         trainLabel.append({"ID" : train, "LABEL" : trainData[train]["result"]})
 
     
-    # out1, out2, out3, totalwords = trainNaiveBayes(trainData)
-    # labellingData = get_label_data()
-    # # #--------------------------------------------------LABELLING FILE END----------------------------------------------------
-    # for labelId in labellingData:
-    #     result = testNaiveBayes(labellingData[labelId], out1, out2, out3, totalwords)
-    #     labellingData[labelId]["result"] = result
-    # labelResult = []
-    # for labelId in labellingData:
-    #     labelResult.append({"ID" : labelId, "LABEL" : labellingData[labelId]["result"]})
-    # # #--------------------------------------------------LABELLING FILE END----------------------------------------------------
+    out1, out2, out3, totalwords = trainNaiveBayes(trainData)
+    labellingData = get_label_data()
+    easy = 0
+    medium = 0
+    hard = 0
+    # #--------------------------------------------------LABELLING FILE END----------------------------------------------------
+    for labelId in labellingData:
+        result = testNaiveBayes(labellingData[labelId], out1, out2, out3, totalwords)
+        labellingData[labelId]["result"] = result
+        if result == "easy":
+            easy += 1
+        elif result == "medium":
+            medium += 1
+        else:
+            hard += 1
+    print(easy)
+    print(medium)
+    print(hard) 
+    labelResult = []
+    for labelId in labellingData:
+        labelResult.append({"ID" : labelId, "LABEL" : labellingData[labelId]["result"]})
+    # #--------------------------------------------------LABELLING FILE END----------------------------------------------------
 
     
     # field names
