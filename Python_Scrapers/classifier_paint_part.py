@@ -45,12 +45,12 @@ def get_parts_and_paints_from_instructions(pdf_text):
     without_codes = []
 
     for item in flat_list:
-        copy_item = item.replace('-', '')
-        copy_item = copy_item.replace('(', '')
-        copy_item = copy_item.replace(')', '')
+        item = item.replace('-', '')
+        item = item.replace('(', '')
+        item = item.replace(')', '')
 
 
-        if copy_item in paint_codes_no_hyphen:
+        if item in paint_codes_no_hyphen:
             non_unique_paint_counter += 1
             item = item.replace('(', '')
             item = item.replace(')', '')

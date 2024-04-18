@@ -41,6 +41,10 @@ case $1 in
 
     python3 data_transfer_scripts/instructions_to_database.py
     echo "Populating database with instruction information"
+
+    python3 data_transfer_scripts/paints_to_instructions_map.py
+    echo "Populating instructions with their required paints"
+
     ;;
 
   "destroy")
@@ -69,6 +73,9 @@ case $1 in
 
     python3 data_transfer_scripts/instructions_to_database.py
     echo "Populating database with instruction information"
+
+    python3 data_transfer_scripts/paints_to_instructions_map.py
+    echo "Populating instructions with their required paints"
     ;;
 
   "dump")

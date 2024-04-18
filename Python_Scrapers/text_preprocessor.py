@@ -298,7 +298,7 @@ def tokenize_text(token_in):
 def get_en_text(text_tokens, langs):
     if len(langs) == 0:
         langs = ["ja", "de", "zh"]
-        
+
     en_words = []
     # print(text_tokens)
     for word in text_tokens:
@@ -310,7 +310,7 @@ def get_en_text(text_tokens, langs):
 
     tokens = tokenize_text(en_words)
     processed_tokens = preprocess(tokens)
-    print(processed_tokens)
+    #print(processed_tokens)
     return processed_tokens
     # return ' '.join([line.strip() for line in en_lines if line != ''])
 

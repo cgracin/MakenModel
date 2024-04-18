@@ -41,10 +41,12 @@ def transfer_paint_data():
     for brand in paint_data.keys():
         cursor.execute("INSERT OR IGNORE INTO brands (brand) VALUES (?)", (brand,))
 
+    tamiya_list = ["Tamiya", "Tamiya Color Lacquer Paint", "Tamiya Paint Markers", "Tamiya Polycarb Marker"]
 
     for brand, paints in paint_data.items():
         for paint in paints:
             paint_code, paint_name, background_color, shine_type, paint_type = paint
+            paint_code = paint_code.replace('-', '')
             cursor.execute(
                 "INSERT INTO paints(brand, paint_name, paint_code, background_color, shine_type, paint_type) "
                 "VALUES (?, ?, ?, ?, ?, ?)",

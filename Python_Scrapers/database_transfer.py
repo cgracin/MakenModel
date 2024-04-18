@@ -19,6 +19,9 @@ def remove_exact_suffix(filename):
     # Define the pattern to match 'instructions-0' and replace with 'instructions'
     pattern = r'(instructions)-0\b'
     new_filename = re.sub(pattern, r'\1', filename)
+    if filename[-1] != 's':
+        filename = filename[:-2]
+
     return new_filename
 
 def get_pdf_name(path):
@@ -35,9 +38,14 @@ def get_pdf_name(path):
 
     return name
 
-def transfer_instruction_to_paint_database(path, paints):
+def transfer_instruction_to_paint_database(path, paints, overwrite=False):
 
     pdf_name = get_pdf_name(path)
+
+    if overwrite == True:
+
+        with open('instruction_to_paint.txt', 'a', encoding='utf-8') as file:
+            file.write(f'{pdf_name}\t{paints}\n')
 
     connection = get_db()
 
