@@ -23,12 +23,12 @@ flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
     - After running these, you can naviagate to localhost, use the username and password listed above and use the website
 
 
-
 <!-- PDF Data -->
 
     -Here is link to the google drive containing all of our parsed json data from google cloud
         - https://drive.google.com/drive/folders/1TmNigsRaUvDCZ5eF03HEJBtU2iUG3K-3?usp=sharing
-    There are over 1500 parsed pdfs and the total size of all this data is 20GB+, which is why we didnt include it in our zip file
+    -There are over 1500 parsed pdfs and the total size of all this data is 20GB+, which is why we didnt include it in our zip file
+    - data/simplifiedjson.json is an example of what one of our parsed pdfs look like
 
 
 <!-- PYTHON SCRAPERS EXPLANATION -->
@@ -77,7 +77,9 @@ flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
         TO RUN:
             $ python3 Python_Scrapers/pdf_analyzer.py
 
-        TODO: EXPLANATION
+        - This program runs all of our algorithms, part and paint extraction, tokenization, naive_bayes, difficulty calculations, and outputs the pdf_name and calculated difficulty score for that pdf to a file called difficulty_scores.output.
+        - ONLY run this if you have all json_extracted pdfs downloaded in your directory
+        - Output file must be named difficulty_scores.output and be placed in the data/ folder
 
     transfer_paints_to_database.py
         TO RUN:
