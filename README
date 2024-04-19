@@ -9,6 +9,27 @@ flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
     username: test_user
     password: Password1!
 
+<!-- IMPORTANT NOTES -->
+    - Most of our functions are written in a way that we run them once, and the output is written to a json or txt file because we are dealing with 20GB+ of data, and don't want to have to re-run everytime
+    - This being so, the only functions a user needs to run to get the website and our data running are as follows:
+        - Create a python virtual environment
+        $ pip install -r requirements.txt
+        $ chmod +x ./bin/makenmodeldb
+        $ ./bin/makenmodeldb create
+            - If this says the database is already created, run this instead
+            $ ./bin/makenmodeldb reset
+        $ flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
+
+    - After running these, you can naviagate to localhost, use the username and password listed above and use the website
+
+
+
+<!-- PDF Data -->
+
+    -Here is link to the google drive containing all of our parsed json data from google cloud
+        - https://drive.google.com/drive/folders/1TmNigsRaUvDCZ5eF03HEJBtU2iUG3K-3?usp=sharing
+    There are over 1500 parsed pdfs and the total size of all this data is 20GB+, which is why we didnt include it in our zip file
+
 
 <!-- PYTHON SCRAPERS EXPLANATION -->
 
