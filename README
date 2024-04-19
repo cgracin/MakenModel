@@ -29,6 +29,7 @@ flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
         - https://drive.google.com/drive/folders/1TmNigsRaUvDCZ5eF03HEJBtU2iUG3K-3?usp=sharing
     -There are over 1500 parsed pdfs and the total size of all this data is 20GB+, which is why we didnt include it in our zip file
     - data/simplifiedjson.json is an example of what one of our parsed pdfs look like
+    - All json_extracted pdfs MUST BE PLACED in a folder named json_extracted/
 
 
 <!-- PYTHON SCRAPERS EXPLANATION -->
