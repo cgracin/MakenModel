@@ -143,5 +143,20 @@ def find_model_identifiers_by_paint_availability():
         info = cur.fetchone()
         context['missing_more'].append(info)
 
+    context['exact_match'] = sorted(context['exact_match'], key=lambda x: x['difficulty_score'])
+    context['missing_one'] = sorted(context['missing_one'], key=lambda x: x['difficulty_score'])
+    context['missing_two'] = sorted(context['missing_two'], key=lambda x: x['difficulty_score'])
+    context['missing_three'] = sorted(context['missing_three'], key=lambda x: x['difficulty_score'])
+    context['missing_more'] = sorted(context['missing_more'], key=lambda x: x['difficulty_score'])
+
+
+    lower_threshold_items = [item for item in context['missing_more'] if item['difficulty_score'] <= 0.142]
+    middle_threshold_items = [item for item in context['missing_more'] if 0.142 < item['difficulty_score'] < 0.177]
+    higher_threshold_items = [item for item in context['missing_more'] if item['difficulty_score'] > 0.177]
+
+    # Limit to top 5 from each category based on the difficulty score
+    context['missing_more'] = (sorted(lower_threshold_items, key=lambda x: x['difficulty_score'])[:5] +
+                            sorted(middle_threshold_items, key=lambda x: x['difficulty_score'])[:5] +
+                            sorted(higher_threshold_items, key=lambda x: x['difficulty_score'])[:5])
 
     return flask.render_template('find_models.html', **context)

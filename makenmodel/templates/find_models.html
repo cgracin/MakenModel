@@ -9,6 +9,21 @@
 {% block content %}
 <div class="container px-4 text-center bg-white rounded">
 
+    <!-- Legend for difficulty rating -->
+    <div class="text-center py-2">
+        <div class="d-flex justify-content-center align-items-center">
+            <div class="mx-2">
+                <span class="border border-5 border-success" style="padding:0.5rem; display: inline-block;"></span> <span>Easy (Green)</span>
+            </div>
+            <div class="mx-2">
+                <span class="border border-5 border-warning" style="padding:0.5rem; display: inline-block;"></span> <span>Medium (Yellow)</span>
+            </div>
+            <div class="mx-2">
+                <span class="border border-5 border-danger" style="padding:0.5rem; display: inline-block;"></span> <span>Hard (Red)</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Start of Accordion Component -->
     <div class="accordion py-5" id="modelsAccordion">
 
@@ -34,6 +49,9 @@
                             </div>
                         {% endif %}
                     {% endfor %}
+                    {% if exact_match|length == 0 %}
+                    <p>Sorry, there are no models you can build with the paints you have</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -60,6 +78,9 @@
                             </div>
                         {% endif %}
                     {% endfor %}
+                    {% if missing_one|length == 0 %}
+                    <p>Sorry, there are no models where you are only missing one paint</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -86,6 +107,9 @@
                             </div>
                         {% endif %}
                     {% endfor %}
+                    {% if missing_two|length == 0 %}
+                    <p>Sorry, there are no models where you are only missing two paints</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -112,6 +136,9 @@
                             </div>
                         {% endif %}
                     {% endfor %}
+                    {% if missing_three|length == 0 %}
+                    <p>Sorry, there are no models where you are only missing three paints</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
