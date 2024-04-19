@@ -70,10 +70,7 @@ flask --app makenmodel --debug run --host 0.0.0.0 --port 8000
 
 <!-- langtest.py -->
 
-    TO RUN: -----
-        $
-
-    - This is used to .......
+    - This is used to filter out words from the pdf that are not english
 
 
 
